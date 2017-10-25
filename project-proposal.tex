@@ -1,0 +1,75 @@
+%        File: project-proposal.tex
+%     Created: Wed Oct 11 11:00 PM 2017 E
+% Last Change: Wed Oct 11 11:00 PM 2017 E
+%
+\documentclass[10pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{fancyhdr}
+\usepackage{tikz}
+
+\pagestyle{fancy}
+
+\lhead{CS 281}
+\rhead{Final Project Proposal}
+
+\begin{document}
+
+\title{Final Project Proposal}
+\author{
+Kevin Chen              \\ \texttt{jiafengchen@college.harvard.edu}
+\and Yufeng Ling        \\ \texttt{yufengling@college.harvard.edu}
+\and Francisco Rivera   \\ \texttt{frivera@college.harvard.edu}}
+\date{\today}
+
+\maketitle
+
+\section{Problem Description}
+
+The primary objective of this project is to predict trip duration from taxi data
+published by the TLC in New York City. An accurate predictor has a host of
+implications, among them,
+
+\begin{itemize}
+\item Accurate predictions can allow NYC residents to give themselves a smaller
+time buffer when commuting in the city, and thus save time.
+
+\item Estimates of trip duration play a central role in the pricing of trips by
+ride-sharing apps, which increasingly feel pressured to a quote a price before
+the completion of the trip.
+
+\item From the perspective of a city planner, easing congestion requires an
+understanding of which trips systematically take longer.
+\end{itemize}
+
+\section{The Data}
+
+\emph{Talk about the data that we get here. Columns we observe, time period we
+get, and how much data there is.}
+
+
+\section{Methodology}
+
+\subsection{Latent Variables Model}
+
+\begin{center}
+\begin{tikzpicture}
+\draw[->] (0,0) -- (0,5);
+\draw[<-] (2,0) -- (2,5);
+\draw[->] (4,0) -- (4,5);
+\draw[->] (0,0) -- (5,0);
+\draw[<-] (0,2) -- (5,2);
+\draw[->] (0,4) -- (5,4);
+
+\node[below left] at (0,0) {$(0,0)$};
+\node[left] at (0,1) {$\lambda_{0,0}^{\uparrow}$};
+\node[left] at (0,1) {$\lambda_{0,0}^{\uparrow}$};
+\node[below] at (1,0) {$\lambda_{0,0}^{\rightarrow}$};
+\end{tikzpicture}
+\end{center}
+
+
+
+\end{document}
+
+
