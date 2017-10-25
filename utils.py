@@ -32,3 +32,11 @@ def filter_coords(df):
         df = df[(df[c] <= lat_r) & (df[c] >= lat_l)]
 
     return df
+
+def filter_cols(df):
+    """
+    Get columns we want
+    """
+    cols = ['Trip_Pickup_DateTime', 'Trip_Dropoff_DateTime', 'Trip_Distance','Start_Lon',
+        'Start_Lat','End_Lon','End_Lat']
+    return df[cols]
