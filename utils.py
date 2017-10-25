@@ -39,4 +39,14 @@ def filter_cols(df):
     """
     cols = ['Trip_Pickup_DateTime', 'Trip_Dropoff_DateTime', 'Trip_Distance','Start_Lon',
         'Start_Lat','End_Lon','End_Lat']
-    return df[cols]
+
+    h = df[cols]
+    h['Trip_Dropoff_DateTime'] = pd.to_datetime(h['Trip_Dropoff_DateTime'])
+    h['Trip_Pickup_DateTime'] = pd.to_datetime(h['Trip_Pickup_DateTime'])
+    return h
+
+def df_to_torch(df_clean):
+    y = Variable(torch.from_numpy(df_clean['duration'].as_matrix()).float(),requires_grad=False)
+    x = Variable(torch.from_numpy(df_clean.drop(['duration'], axis=1).as_matrix()).float())
+    return x, y
+
