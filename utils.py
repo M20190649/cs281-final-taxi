@@ -9,6 +9,19 @@ import io
 import requests
 
 def filter_coords(df):
+    """
+    filter coordinates on df to trim unreasonable coordinates
+
+    Inputs
+    -----
+    df : pd.DataFrame
+        DataFrame wanting to filter
+
+    Returns
+    -----
+    df : pd.DataFrame
+        Filtered DataFrame
+    """
     lon_l, lon_r = -74.1, -73.7
     lat_l, lat_r = 40.65, 40.85
 
