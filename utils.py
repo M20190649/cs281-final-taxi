@@ -6,7 +6,7 @@ import torch
 from torch.autograd import Variable
 from torch import Tensor
 import io
-import requests
+# import requests
 
 def filter_coords(df):
     """
