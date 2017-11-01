@@ -1,7 +1,8 @@
 import numpy as np
+from matplotlib import pyplot as plt
 
 class Node():
-    def __init__(self, coord, node_id):
+    def __init__(self, coord, node_id, network):
         """
         Construct a Node object given a tuple of coordinates and id
 
@@ -9,14 +10,20 @@ class Node():
         ------
         coord: a tuple of (lat, long) coordinate
         node_id: an int specifying an id
+        network: parent network
         """
         self.coord = coord
         self.node_id = node_id
         self.starts, self.ends = [], []
+        self.network = network
+
+    def __repr__(self):
+        x, y = self.coord
+        return '<Node {}: ({}, {})>'.format(self.node_id, x, y)
 
 
 class Street():
-    def __init__(self, start_node_id, end_node_id, street_id, twoway):
+    def __init__(self, start_node_id, end_node_id, street_id, twoway, network):
         """
         Construct a Street object from the start_node to the end_node
 
@@ -26,12 +33,14 @@ class Street():
         end_node: the end Node
         id: int street_id
         twoway: boolean, whether the street is twoway
+        network: parent network
         """
         self.street_id = street_id
         self.start = start_node_id
         self.end = end_node_id
         self.twin = None
         self.twoway = twoway
+        self.network = network
         if twoway:
             self.exist = 1
         else:
@@ -54,6 +63,12 @@ class Street():
             raise AttributeError('Twoway streets do not have twins')
         self.twin = twin_id
 
+    def __repr__(self):
+        return '<Street {}: twoway = {}; from {} to {}>'\
+                .format(self.street_id, self.twoway,
+                    self.network.nodes[self.start],
+                    self.network.nodes[self.end])
+
 
 class Network():
     def __init__(self, coords):
@@ -70,7 +85,7 @@ class Network():
         self.streets = []
 
         for coord in coords:
-            node = Node(coord, self.this_node_id)
+            node = Node(coord, self.this_node_id, self)
             self.nodes.append(node)
             self.this_node_id += 1
 
@@ -106,7 +121,7 @@ class Network():
         """
 
         street_id = self.this_street_id
-        street = Street(start_node_id, end_node_id, street_id, twoway)
+        street = Street(start_node_id, end_node_id, street_id, twoway, self)
         self.this_street_id += 1
         self.streets.append(street)
         self.__add_street_to_node(start_node_id, street_id, False)
@@ -141,6 +156,15 @@ class Network():
                     (node.coord[0] - lat) ** 2 + (node.coord[1] - long) ** 2,
                     self.nodes)
         return np.argmin(dists)
+
+    def plot(self):
+        for street in self.streets:
+            n1 = self.nodes[street.start]
+            n2 = self.nodes[street.end]
+            x1, y1 = n1.coord
+            x2, y2 = n2.coord
+            plt.plot([x1, x2], [y1, y2])
+
 
 
 

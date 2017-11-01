@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-# from tqdm import tqdm_notebook as tqdm
+from tqdm import tqdm_notebook as tqdm
 import torch
 from torch.autograd import Variable
 from torch import Tensor
@@ -10,7 +10,7 @@ import io
 
 def filter_coords(df):
     """
-    filter coordinates on df to trim unreasonable coordinates
+    Filter coordinates on df to trim unreasonable coordinates.
 
     Inputs
     -----
@@ -33,12 +33,38 @@ def filter_coords(df):
 
     return df
 
+def filter_durations(df):
+    """
+    Filter durations on df to trip unreasonable durations (i.e. negative values
+    and durations that are too long.
+
+    Inputs
+    ------
+    df : pd.DataFrame
+        Dataframe you want to filter.
+    
+    Returns
+    -------
+    df : pd.DataFrame
+        Filtered DataFrame
+    """
+
+    return df[(df.duration > 0) & (df.duration < 24*60*60)]
+
+
 def filter_cols(df):
     """
-    Get columns we want
+    Get columns we want. DEPRECATED.
     """
-    cols = ['Trip_Pickup_DateTime', 'Trip_Dropoff_DateTime', 'Trip_Distance','Start_Lon',
-        'Start_Lat','End_Lon','End_Lat']
+    cols = [
+             'Trip_Pickup_DateTime', 
+             'Trip_Dropoff_DateTime', 
+             'Trip_Distance',
+             'Start_Lon',
+             'Start_Lat',
+             'End_Lon',
+             'End_Lat',
+           ]
 
     h = df[cols]
     h['Trip_Dropoff_DateTime'] = pd.to_datetime(h['Trip_Dropoff_DateTime'])
@@ -46,7 +72,17 @@ def filter_cols(df):
     return h
 
 def df_to_torch(df_clean):
-    y = Variable(torch.from_numpy(df_clean['duration'].as_matrix()).float(),requires_grad=False)
-    x = Variable(torch.from_numpy(df_clean.drop(['duration'], axis=1).as_matrix()).float())
+    y = Variable(
+          torch.from_numpy(
+            df_clean['duration'].as_matrix()
+          ).float(),
+          requires_grad=False)
+
+    x = Variable(
+          torch.from_numpy(
+            df_clean.drop(['duration'],
+                          axis=1).as_matrix()
+          ).float())
+
     return x, y
 
