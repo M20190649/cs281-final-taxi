@@ -1,3 +1,5 @@
+import numpy as np
+
 class Node():
     def __init__(self, coord, node_id):
         """
@@ -52,6 +54,7 @@ class Street():
             raise AttributeError('Twoway streets do not have twins')
         self.twin = twin_id
 
+
 class Network():
     def __init__(self, coords):
         """
@@ -71,7 +74,7 @@ class Network():
             self.nodes.append(node)
             self.this_node_id += 1
 
-    def add_street_to_node(self, node_id, street_id, ends_street):
+    def __add_street_to_node(self, node_id, street_id, ends_street):
         """
         Add a Street object to the Node
 
@@ -87,7 +90,7 @@ class Network():
         else:
             self.nodes[node_id].starts.append(street_id)
 
-    def add_single_street(self, start_node_id, end_node_id, twoway):
+    def __add_single_street(self, start_node_id, end_node_id, twoway):
         """
         Add a Street object to the Network and related Nodes
 
@@ -106,8 +109,8 @@ class Network():
         street = Street(start_node_id, end_node_id, street_id, twoway)
         self.this_street_id += 1
         self.streets.append(street)
-        self.add_street_to_node(start_node_id, street_id, False)
-        self.add_street_to_node(end_node_id, street_id, True)
+        self.__add_street_to_node(start_node_id, street_id, False)
+        self.__add_street_to_node(end_node_id, street_id, True)
         return street
 
     def add_streets_from_nodes(self, node1_id, node2_id, twoway):
@@ -123,23 +126,21 @@ class Network():
         -----
         s1, s2: Streets constructed
         """
-        s1 = self.add_single_street(node1_id, node2_id, twoway)
-        s2 = self.add_single_street(node2_id, node1_id, twoway)
+        s1 = self.__add_single_street(node1_id, node2_id, twoway)
+        s2 = self.__add_single_street(node2_id, node1_id, twoway)
         if not twoway:
             s1.add_twin(s2.street_id)
             s2.add_twin(s1.street_id)
         return s1, s2
 
-
-
-
-
-
-
-
-
-
-
+    def get_node(self, lat, long):
+        """
+        Takes lat, long coordinates and returns the id of the closest node
+        """
+        dists = map(lambda node :
+                    (node.coord[0] - lat) ** 2 + (node.coord[1] - long) ** 2,
+                    self.nodes)
+        return np.argmin(dists)
 
 
 
