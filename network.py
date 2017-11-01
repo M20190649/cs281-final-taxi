@@ -1,5 +1,6 @@
 import numpy as np
 from matplotlib import pyplot as plt
+from tqdm import tqdm
 
 class Node():
     def __init__(self, coord, node_id, network):
@@ -158,7 +159,7 @@ class Network():
         return np.argmin(dists)
 
     def plot(self):
-        for street in self.streets:
+        for street in tqdm(self.streets):
             n1 = self.nodes[street.start]
             n2 = self.nodes[street.end]
             x1, y1 = n1.coord
