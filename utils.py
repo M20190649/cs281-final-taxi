@@ -42,7 +42,7 @@ def filter_durations(df):
     ------
     df : pd.DataFrame
         Dataframe you want to filter.
-    
+
     Returns
     -------
     df : pd.DataFrame
@@ -57,8 +57,8 @@ def filter_cols(df):
     Get columns we want. DEPRECATED.
     """
     cols = [
-             'Trip_Pickup_DateTime', 
-             'Trip_Dropoff_DateTime', 
+             'Trip_Pickup_DateTime',
+             'Trip_Dropoff_DateTime',
              'Trip_Distance',
              'Start_Lon',
              'Start_Lat',
@@ -85,4 +85,78 @@ def df_to_torch(df_clean):
           ).float())
 
     return x, y
+
+
+def unnormalize(df):
+    """
+    unnormalize Start_Lon, Start_Lat, End_Lon, End_Lat
+    """
+    df['start_lon_raw'] = - 73.97826142142969 + 0.0239235715736219 * df['Start_Lon']
+    df['start_lat_raw'] = 40.753207908605766 + 0.02262721225173857 * df['Start_Lat']
+    df['end_lon_raw'] = -73.97635609080373 + 0.025989097948950303 * df['End_Lon']
+    df['end_lat_raw'] = 40.753145629515345 + 0.025820804247699374 * df['End_Lat']
+    return df
+
+def filter_manhattan(df):
+    lower = lambda x : (40.84 - 40.66)/(74.03-73.87) * x + (40.66 - (40.84 - 40.66)/(74.03-73.87) * -74.03)
+    upper = lambda x : (40.7 - 40.86)/ (-74.05+73.93) * x + (40.7 - (40.7 - 40.86)/ (-74.05+73.93) * -74.05)
+
+    return df[(df['start_lat_raw'] > lower(df['start_lon_raw']))
+           & (df['start_lat_raw'] < upper(df['start_lon_raw']))
+           & (df['end_lat_raw'] > lower(df['end_lon_raw']))
+           & (df['end_lat_raw'] < upper(df['end_lon_raw']))]
+
+
+def rotate_manhattan(df):
+    rotmat = np.array([[ 0.82764898, -0.56124608],
+                       [ 0.56124608,  0.82764898]])
+    starts = df[['start_lon_raw', 'start_lat_raw']].as_matrix() @ rotmat.T
+    df['start_x'] = starts[:,0] + 84.125113
+    df['start_y'] = starts[:,1] + 7.853407
+
+    ends = df[['end_lon_raw', 'end_lat_raw']].as_matrix() @ rotmat.T
+    df['end_x'] = ends[:,0] + 84.125113
+    df['end_y'] = ends[:,1] + 7.853407
+    return df
+
+def affine_transform(vec):
+    rotmat = np.array([[ 0.82764898, -0.56124608],
+                       [ 0.56124608,  0.82764898]])
+    return rotmat @ vec + np.array([84.125113, 7.853407])
+
+def inverse_affine_transform(vec):
+    rotmat = np.array([[ 0.82764898, -0.56124608],
+                       [ 0.56124608,  0.82764898]])
+    return np.inv(rotmat) @ (vec - np.array([84.125113, 7.853407]))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
