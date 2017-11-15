@@ -1,22 +1,31 @@
 import numpy as np
-import torch
-from torch import Tensor
-from torch.autograd import Variable
+cimport numpy as np
 
+# import torch
+# from torch import Tensor
+# from torch.autograd import Variable
+
+cdef int M, N
 
 M, N = (10,35)
 
-w = np.arange(M * N).reshape(M, N)
+def min_cost(tuple source,
+            tuple target,
+            np.ndarray w):
 
-def weight(i, j):
-    return w[i,j]
+    def weight(int i, int j):
+        return w[i,j]
 
-def min_cost(source, target):
+    cdef int sx, sy, tx, ty, i, j
     sx, sy = source
     tx, ty = target
 
+    cdef int hor_dir, ver_dir
     hor_dir = np.sign(tx - sx)
     ver_dir = np.sign(ty - sy)
+
+    cdef int X, Y
+    cdef np.ndarray cost, paths
 
     X = np.abs(tx - sx) + 1
     Y = np.abs(ty - sy) + 1
@@ -47,14 +56,9 @@ def min_cost(source, target):
                 paths[i, j] = paths[i - 1, j] + \
                     [(sx + i * hor_dir, sy + j * ver_dir)]
 
-    short = np.zeros((M,N))
+    cdef np.ndarray st
+    st = np.zeros((M,N))
+
     for i, j in paths[X-1,Y-1]:
-        short[i,j] = 1
-    return Variable(Tensor(short))
-
-
-    # x = [i for i, _ in paths[X-1,Y-1]]
-    # y = [j for _, j in paths[X-1,Y-1]]
-    # return torch.LongTensor(np.array(x)), torch.LongTensor(np.array(y))
-
-
+        st[i,j] = 1
+    return st
