@@ -1,0 +1,58 @@
+\documentclass[12pt]{article}
+\usepackage{jchen2}
+
+\begin{document}
+\begin{center}
+\begin{tabular}{cc}\toprule
+    Notation & Explanation \\
+    \midrule
+    $w_i$ & Weight of $i$th grid node \\
+    $\bm W$ & $\{w_1,\ldots, w_N\}$ \\
+    $Z\uppr{k} = \{i_1\uppr{k}, \ldots, i_{n\uppr{k}}\uppr{k}\}$ & Path taken by trip $k$ \\
+    $x_1\uppr{k}, x_2\uppr{k}$ & Start and end locations of trip $k$\\
+    $\bm Z\uppr{k} = \bm Z(x_1\uppr{k},x_2\uppr{k})$ & Set of reasonable paths for trip $k$\\
+    $T\uppr{k}$ & Time taken by trip $k$ \\\bottomrule
+\end{tabular}
+\end{center}
+
+Assume the following model \begin{align*}
+\bm W &\sim p_{\bm W} \\
+Z\uppr{k} | \bm W &\sim p_{Z | \bm W} \tag{a distribution over $\bm Z\uppr{k}$}\\
+T\uppr{k} | Z\uppr{k}, \bm W &\sim \Norm\pr{\sum_{i\in Z\uppr{k}} w_i, \sigma^2}
+\end{align*}
+We are interested in the posterior distribution of $\bm W$: 
+\begin{align*}
+p(\bm W | T\uppr{k}) &= \frac{p(T\uppr{k}| \bm W) p(\bm W)}{p(T\uppr{k})} \\
+&=\frac{\bk{\sum_{Z\uppr{k} \in \bm Z\uppr{k}} p(T\uppr{k}|Z\uppr{k}, \bm W) p(Z\uppr{k}| \bm W)} p(\bm W)}{p(T\uppr{k})}
+\end{align*}
+
+If we are only interested in the MAP, then we have \[
+\log p(\bm W | T\uppr{k}) = \underbrace{\log \pr{\sum_{Z\uppr{k} \in \bm Z\uppr{k}} p(T\uppr{k}|Z\uppr{k}, \bm W) p(Z\uppr{k}| \bm W)}}_{\ell(\bm W | T\uppr{k}) \text{ log-likelihood}} + \underbrace{\log p(\bm W)}_{\text{log prior}} + \text{const.}
+\]
+
+Our main challenge here is to compute the log-likelihood, which involves a sum over all of $\bm Z\uppr{k}$. If the set of reasonable paths include all paths inside a rectangle of size $n \times m$, then we have $\binom{n+m}{n} \sim \frac{(n+m)^n}{n^n}e^{n}$ terms, which is clearly intractable. Zhan, et al. solves the issue by computing the 20 shortest path as the reasonable path set and then running softmax.
+
+\paragraph{Can we EM?} EM algorithm approximates the log-likelihood via 
+\begin{align*}
+Q(\bm W|\bm W^{(t)}) &= E\bk{\log p(T\uppr{k}, Z\uppr{k} | \bm W) | T\uppr{k}, \bm W\uppr{t}} \\&= -\frac{1}{2\sigma^2}\sum_{Z\uppr{k} \in \bm Z\uppr{k}} \pr{T\uppr{k} - \sum_{Z\uppr{k}} w_i}^2 p(Z\uppr{k} | T\uppr{k}, \bm W\uppr{t}) + \text{const.}
+\end{align*}
+However, (1) we again have to evaluate a sum of order $|\bm Z|$ and (2) we don't have good estimates of $p(Z\uppr{k} | T\uppr{k}, \bm W\uppr{t})$.
+
+\paragraph{Can we Monte Carlo?} We might consider using rejection sampling to approximate \[
+E_{Z}\bk{p(T\uppr{k}| Z\uppr{k}, \bm W)|\bm W} \approx \frac{1}{L}\sum_{j=1}^L p(T\uppr{k}| \tilde Z\uppr{k}_j, \bm W).
+\]
+The problem here is that the gradient update via \texttt{autograd} cannot take into account the gradient incurred \emph{in the sampling process}. 
+
+\paragraph{Can we variational inference?} Maybe. But (1) mean field doesn't really apply since $Z\uppr{k}$ cannot be broken into independent variables naturally and (2) VAE a la Kingma and Welling only works on continuous latent variables.
+
+\paragraph{A Monte Carlo based method} We repeatedly sample $\tilde Z$ \emph{uniformly} from $\bm Z$ and use the sample mean to approximate summations over $\bm Z$. \begin{align*}
+&\log E_Z\pr{p(T\uppr{k} | Z\uppr{k}, \bm W)| \bm W} \\&= \log\bk{ |\bm Z|E_{\tilde Z}\bk{p(T\uppr{k} | \tilde Z\uppr{k},\bm W)p(\tilde Z\uppr{k} | \bm W)} \tag{where $\tilde Z$ is uniform over $\bm Z$}} \\
+&= \log E_{\tilde Z}\bk{p(T\uppr{k} | \tilde Z\uppr{k},\bm W)p(\tilde Z\uppr{k} | \bm W)} + \text{const.} \\
+&\ge E_{\tilde Z}\bk{\log p(T\uppr{k} | \tilde Z\uppr{k},\bm W)} + E_{\tilde Z}\bk{\log p(\tilde Z\uppr{k} | \bm W)} \tag{Jensen; omitting constant}\\
+&= -\frac{1}{2L\sigma^2}\sum_{j=1}^L \bk{T\uppr{k} - \sum_{i\in \tilde Z\uppr{k}_j}w_i}^2 + \frac{1}{L}\sum_{i=1}^L \bk{-\sum_{i\in\tilde Z_{j}\uppr{k}}w_i - \log \sum_{\bm Z} \exp\pr{-\sum_{Z\uppr{k}} w_i}}  \tag{We parameterize the distribution of $Z\uppr{k}$ as Categorical with $\frac{\exp(-\sum w)}{\sum \exp(-\sum w)}$} \\
+&= -\frac{1}{2L\sigma^2}\sum_{j=1}^L \bk{T\uppr{k} - \sum_{i\in \tilde Z\uppr{k}_j}w_i}^2 - \frac{1}{L}\sum_{i=1}^L \sum_{i\in\tilde Z_{j}\uppr{k}}w_i - \sum_{i=1}^L \log\bk{|\bm Z| E_{\tilde Z}\bk{\exp\pr{-\sum_{\tilde Z} w_i}}} \\
+&= -\frac{1}{2L\sigma^2}\sum_{j=1}^L \bk{T\uppr{k} - \sum_{i\in \tilde Z\uppr{k}_j}w_i}^2 - \frac{1}{L}\sum_{i=1}^L\sum_{i\in\tilde Z_{j}\uppr{k}}w_i - \sum_{i=1}^L \underset{i=1,\ldots,L}{\text{logsumexp}}\pr{-\sum_{\tilde Z_i} w_i}
+\end{align*}
+
+
+\end{document}
