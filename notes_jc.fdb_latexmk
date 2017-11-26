@@ -1,5 +1,5 @@
 # Fdb version 3
-["pdflatex"] 1511663350 "notes_jc.tex" "notes_jc.pdf" "notes_jc" 1511663351
+["pdflatex"] 1511672197 "notes_jc.tex" "notes_jc.pdf" "notes_jc" 1511672198
   "/Users/jiafengchen/Library/texmf/fonts/tfm/public/xypic/texfonts/xyatip10.tfm" 1381043914 608 50246cc71b0635b0ba0a5c10a0bf4257 ""
   "/Users/jiafengchen/Library/texmf/fonts/tfm/public/xypic/texfonts/xybsql10.tfm" 1381043914 608 4db60f15ea23b4ec2d796c6d568a63fa ""
   "/Users/jiafengchen/Library/texmf/fonts/tfm/public/xypic/texfonts/xybtip10.tfm" 1381043914 608 50246cc71b0635b0ba0a5c10a0bf4257 ""
@@ -145,11 +145,11 @@
   "/usr/local/texlive/2016/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1487214684 1888048 f2c5faed5981a516f406b2ccc20bff71 ""
   "/usr/local/texlive/2016/texmf-var/web2c/pdftex/pdflatex.fmt" 1463979169 3873397 413fbfbbedb8e719ddc392043a7add02 ""
   "/usr/local/texlive/2016/texmf.cnf" 1463979140 577 2938757e76f31531e65cc647e3507693 ""
-  "notes_jc.aux" 1511663351 1148 32120c374e0cf1e3c1b092c5b144e00d ""
-  "notes_jc.out" 1511663350 0 d41d8cd98f00b204e9800998ecf8427e ""
-  "notes_jc.tex" 1511663343 4404 f49ca489e0c0f9da9d2d0902764f2478 ""
+  "notes_jc.aux" 1511672198 1148 32120c374e0cf1e3c1b092c5b144e00d ""
+  "notes_jc.out" 1511672198 0 d41d8cd98f00b204e9800998ecf8427e ""
+  "notes_jc.tex" 1511672196 4402 b9572769cc302ba06b78f01e9be2c1dc ""
   (generated)
-  "notes_jc.out"
   "notes_jc.log"
-  "notes_jc.pdf"
   "notes_jc.aux"
+  "notes_jc.out"
+  "notes_jc.pdf"

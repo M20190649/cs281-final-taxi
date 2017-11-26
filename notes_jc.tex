@@ -50,8 +50,8 @@ The problem here is that the gradient update via \texttt{autograd} cannot take i
 &= \log E_{\tilde Z}\bk{p(T\uppr{k} | \tilde Z\uppr{k},\bm W)p(\tilde Z\uppr{k} | \bm W)} + \text{const.} \\
 &\ge E_{\tilde Z}\bk{\log p(T\uppr{k} | \tilde Z\uppr{k},\bm W)} + E_{\tilde Z}\bk{\log p(\tilde Z\uppr{k} | \bm W)} \tag{Jensen; omitting constant}\\
 &= -\frac{1}{2L\sigma^2}\sum_{j=1}^L \bk{T\uppr{k} - \sum_{i\in \tilde Z\uppr{k}_j}w_i}^2 + \frac{1}{L}\sum_{i=1}^L \bk{-\sum_{i\in\tilde Z_{j}\uppr{k}}w_i - \log \sum_{\bm Z} \exp\pr{-\sum_{Z\uppr{k}} w_i}}  \tag{We parameterize the distribution of $Z\uppr{k}$ as Categorical with $\frac{\exp(-\sum w)}{\sum \exp(-\sum w)}$} \\
-&= -\frac{1}{2L\sigma^2}\sum_{j=1}^L \bk{T\uppr{k} - \sum_{i\in \tilde Z\uppr{k}_j}w_i}^2 - \frac{1}{L}\sum_{i=1}^L \sum_{i\in\tilde Z_{j}\uppr{k}}w_i - \sum_{i=1}^L \log\bk{|\bm Z| E_{\tilde Z}\bk{\exp\pr{-\sum_{\tilde Z} w_i}}} \\
-&= -\frac{1}{2L\sigma^2}\sum_{j=1}^L \bk{T\uppr{k} - \sum_{i\in \tilde Z\uppr{k}_j}w_i}^2 - \frac{1}{L}\sum_{i=1}^L\sum_{i\in\tilde Z_{j}\uppr{k}}w_i - \sum_{i=1}^L \underset{i=1,\ldots,L}{\text{logsumexp}}\pr{-\sum_{\tilde Z_i} w_i}
+&= -\frac{1}{2L\sigma^2}\sum_{j=1}^L \bk{T\uppr{k} - \sum_{i\in \tilde Z\uppr{k}_j}w_i}^2 - \frac{1}{L}\sum_{i=1}^L \sum_{i\in\tilde Z_{j}\uppr{k}}w_i - \frac{1}{L}\sum_{i=1}^L \log\bk{|\bm Z| E_{\tilde Z}\bk{\exp\pr{-\sum_{\tilde Z} w_i}}} \\
+&= -\frac{1}{2L\sigma^2}\sum_{j=1}^L \bk{T\uppr{k} - \sum_{i\in \tilde Z\uppr{k}_j}w_i}^2 - \frac{1}{L}\sum_{i=1}^L\sum_{i\in\tilde Z_{j}\uppr{k}}w_i - \underset{i=1,\ldots,L}{\text{logsumexp}}\pr{-\sum_{\tilde Z_i} w_i}
 \end{align*}
 
 
