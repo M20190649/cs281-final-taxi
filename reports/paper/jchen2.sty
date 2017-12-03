@@ -1,0 +1,271 @@
+\NeedsTeXFormat{LaTeX2e}[1994/06/01]
+\ProvidesPackage{jchen2}
+
+\RequirePackage[utf8]{inputenc}
+\RequirePackage[english]{babel}
+\RequirePackage{amsmath,amsthm,amsfonts,amssymb,stmaryrd,enumitem,color}
+\RequirePackage[all]{xy}
+\RequirePackage{graphicx}
+\RequirePackage[margin=1in]{geometry}
+\RequirePackage{hyperref}
+\RequirePackage{comment}
+\RequirePackage{bm}
+% \RequirePackage[]{algorithm2e}
+% \RequirePackage[dvipsnames]{xcolor}
+\RequirePackage{booktabs}
+
+
+
+
+%%%%%%%%%%%%%%%theorems%%%%%%%%%%%%%%%%%%%%%%%
+\DeclareOption{thm}{
+    \theoremstyle{definition}
+    \newtheorem{theorem}{Theorem}
+    \newtheorem{prop}[theorem]{Proposition}
+    \newtheorem{defn}[theorem]{Definition}
+    \newtheorem{lemma}[theorem]{Lemma}
+    \newtheorem{cor}[theorem]{Corollary}
+    \newtheorem{ex}[theorem]{Example}
+    \newtheorem{fact}[theorem]{Fact}
+}
+
+\DeclareOption{thm_section}{
+    \theoremstyle{definition}
+    \newtheorem{theorem}{Theorem}[section]
+    \newtheorem{prop}[theorem]{Proposition}
+    \newtheorem{defn}[theorem]{Definition}
+    \newtheorem{lemma}[theorem]{Lemma}
+    \newtheorem{cor}[theorem]{Corollary}
+    \newtheorem{ex}[theorem]{Example}
+    \newtheorem{fact}[theorem]{Fact}
+}
+
+\DeclareOption{thm*}{
+    \theoremstyle{definition}
+    \newtheorem*{theorem}{Theorem}
+    \newtheorem*{prop}{Proposition}
+    \newtheorem*{defn}{Definition}
+    \newtheorem*{lemma}{Lemma}
+    \newtheorem*{cor}{Corollary}
+    \newtheorem*{ex}{Example}
+    \newtheorem*{fact}{Fact}
+}
+
+%%% fonts
+\newif\if@loadpalatino
+\DeclareOption{palatino}{\@loadpalatinotrue}
+
+
+
+
+\newif\if@loadnoindent %\@loadhyperreffalse
+\DeclareOption{noindent}{
+    \begingroup
+    \makeatletter
+    \@for\theoremstyle:=definition,remark,plain\do{%
+        \expandafter\g@addto@macro\csname th@\theoremstyle\endcsname{%
+            \addtolength\thm@preskip\parskip
+            }%
+        }
+    \endgroup
+    \@loadnoindenttrue
+}
+
+
+\theoremstyle{remark}
+\newtheorem*{rmk}{Remark}
+
+\theoremstyle{definition}
+\newtheorem*{theorem*}{Theorem}
+\newtheorem*{prop*}{Proposition}
+\newtheorem*{defn*}{Definition}
+\newtheorem*{lemma*}{Lemma}
+\newtheorem*{cor*}{Corollary}
+\newtheorem*{ex*}{Example}
+\newtheorem*{fact*}{Fact}
+
+
+
+\ProcessOptions
+\ExecuteOptions{}
+
+\if@loadnoindent
+  \RequirePackage{parskip}
+\fi
+
+\if@loadpalatino
+    \RequirePackage[T1]{fontenc}
+    \RequirePackage{newpxtext,newpxmath}
+\fi
+
+
+%% Links
+
+\hypersetup{
+    colorlinks = true,
+    allcolors = RoyalBlue
+}
+
+
+
+
+%%%%%%%%%%%%%%%commands%%%%%%%%%%%%%%%%%%%%%%%
+
+% Statistics
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\var}{\operatorname{Var}}
+\newcommand{\cov}{\operatorname{Cov}}
+\newcommand{\corr}{\operatorname{Corr}}
+\newcommand{\Bern}{\operatorname{Bern}}
+\newcommand{\Unif}{\operatorname{Unif}}
+\newcommand{\Bin}{\operatorname{Bin}}
+\newcommand{\Expo}{\operatorname{Expo}}
+\newcommand{\Pois}{\operatorname{Pois}}
+\newcommand{\Gammadist}{\operatorname{Gamma}}
+\newcommand{\Logistic}{\operatorname{Logistic}}
+\newcommand{\Laplace}{\operatorname{Laplace}}
+\newcommand{\NBin}{\operatorname{NBin}}
+\newcommand{\Beta}{\operatorname{Beta}}
+\newcommand{\Geom}{\operatorname{Geom}}
+\newcommand{\Dir}{\operatorname{Dir}}
+\newcommand{\FS}{\operatorname{FS}}
+\newcommand{\Norm}{\mathcal{N}}
+\newcommand{\B}{\mathcal{B}}
+\renewcommand{\L}{\mathcal{L}}
+\newcommand{\Mult}{\operatorname{Mult}}
+\newcommand{\supp}{\operatorname{supp}}
+\newcommand{\pto}{\overset{p}{\to}}
+\newcommand{\dto}{\overset{d}{\to}}
+\newcommand{\asto}{\overset{a.s.}{\to}}
+\newcommand{\iid}{\overset{i.i.d.}{\sim}}
+
+% CLT relevant
+% Lyapunov
+\newcommand{\Lyap}{\operatorname{Lyap}}
+% Fundamental Bound
+\newcommand{\FB}{\operatorname{FB}}
+% Lindeberg
+\newcommand{\Lind}{\operatorname{Lind}}
+
+
+
+
+\DeclareSymbolFont{symbolsC}{U}{txsyc}{m}{n}
+\DeclareMathSymbol{\indep}{\mathrel}{symbolsC}{121}
+
+               \newcommand{\notes}[5]{
+        \noindent
+        \begin{center}
+        \framebox{
+                \vbox{
+                \hbox to 5.78in { { \bf Stat 210}
+                \hfill #2}
+                \vspace{4mm}
+                \hbox to 5.78in { {\large \hfill #5 \hfill} }
+                \vspace{2mm}
+                \hbox to 5.78in { {\it #3 \hfill #4} }
+                }
+        }
+        \end{center}
+        \vspace*{4mm}
+}
+
+
+
+% single letters
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+
+\newcommand{\G}{\mathcal{G}}
+\newcommand{\M}{\mathcal{M}}
+\newcommand{\F}{\mathcal{F}}
+
+% linear algebra
+\newcount\colveccount
+\newcommand*\colvec[1]{
+        \global\colveccount#1
+        \begin{pmatrix}
+        \colvecnext
+}
+\def\colvecnext#1{
+        #1
+        \global\advance\colveccount-1
+        \ifnum\colveccount>0
+                \\
+                \expandafter\colvecnext
+        \else
+                \end{pmatrix}
+        \fi
+}
+
+\newcommand*\colvecb[1]{
+        \global\colveccount#1
+        \begin{bmatrix}
+        \colvecbnext
+}
+\def\colvecbnext#1{
+        #1
+        \global\advance\colveccount-1
+        \ifnum\colveccount>0
+                \\
+                \expandafter\colvecbnext
+        \else
+                \end{bmatrix}
+        \fi
+}
+
+
+
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\inprod}[1]{\left\langle {#1} \right \rangle}
+\newcommand{\Span}{\operatorname{span}}
+\newcommand{\im}{\operatorname{im}}
+\newcommand{\sgn}{\operatorname{sgn}}
+\newcommand{\rank}{\operatorname{rank}}
+\newcommand{\diag}{\operatorname{diag}}
+
+% differentiation
+\newcommand{\diff}[2]{\frac{\partial{#1}}{\partial{#2}}}
+
+% algebra
+\newcommand{\aut}{\operatorname{Aut}}
+\newcommand{\alt}{\mathrm{Alt}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\stab}{\operatorname{Stab}}
+
+% misc
+\newcommand{\parens}[1]{\left({#1}\right)}
+\newcommand{\pr}{\parens}
+\newcommand{\prr}{\parens}
+\newcommand{\bk}[1]{\left[{#1}\right]}
+\newcommand{\br}[1]{\left\{{#1}\right\}}
+\renewcommand{\Re}{\operatorname{Re}}
+\renewcommand{\Im}{\operatorname{Im}}
+\newcommand{\abs}[1]{\left| #1 \right|}
+\newcommand{\ip}[1]{\langle #1 \rangle}
+\renewcommand{\hat}{\widehat}
+\renewcommand{\bar}{\overline}
+\newcommand{\tr}{\operatorname{tr}} % trace
+
+\newcommand{\bhat}[1]{\hat {\bm {#1}}}
+\newcommand{\btilde}[1]{\tilde {\bm {#1}}}
+\newcommand{\bbar}[1]{\bar {\bm {#1}}}
+
+\newcommand{\T}{\mathcal T}
+\newcommand{\uppr}[1]{^{(#1)}}
+
+
+
+%\newcommand{\eg}{\paragraph{Example}}
+
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max} % thin space, limits underneath in displays
+
+\newenvironment{sol}{\color{blue}\begin{proof}[Solution]}
+{\end{proof}}
+\newcommand{\Hom}{\operatorname{Hom}}
+
+\endinput
