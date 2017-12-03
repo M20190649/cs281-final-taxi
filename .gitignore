@@ -2,3 +2,6 @@
 .DS_Store
 data/*
 *swp
+*log
+*synctex.gz
+*aux
