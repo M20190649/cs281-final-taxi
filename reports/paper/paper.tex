@@ -8,6 +8,10 @@
 \usepackage{algorithmic}
 \usepackage{lipsum}
 \usepackage{todonotes,tikz}
+\usepackage{cite}
+\usepackage{natbib}
+
+
 \usetikzlibrary{bayesnet}
 \usepackage{jchen2}
 \usepackage[accepted]{icml2017}
@@ -73,7 +77,7 @@ Example Structure:
 
 \section{Model}
 
-We represent a city's road network with a connected graph $G = (V,E)$. Assume that each vertex $i \in V$ is associated with a weight $w_i$, representing the cost of traversing vertex $i$. A trip is represented by a path in $G$, and the distribution of the trip's duration depends on the weights $w_i$ of vertices included in the path. Note that the choice of the path can in general depend on the collection of weights $\bm W$. In full generality, the model is represented by Figure~\ref{fig:dgm}, where trips in the data are indexed by $(k)$, $T\uppr{k}$ is the observed trip duration, and $Z\uppr{k}$ is the path taken by trip $k$, a latent variable.
+We represent a city's road network with a connected graph $G = (V,E)$. Assume that each vertex $i \in V$ is associated with a weight $w_i$, representing the cost of traversing vertex $i$. A trip is represented by a path in $G$, and the distribution of the trip's duration depends on the weights $w_i$ of vertices included in the path. Note that the choice of the path can in general depend on the collection of weights $\bm W$. In full generality, the model is represented by Figure~\ref{fig:dgm}, where trips in the data are indexed by $(k)$, $T\uppr{k}$ is the observed trip duration, and $Z\uppr{k}$ is the path taken by trip $k$, a latent variable. Our primary interest is to perform inference on $\bm W$, so as to learn the levels of congestion associated with each vertex in $G$.
 
 \begin{figure}[h]
   \centering
@@ -94,7 +98,7 @@ We represent a city's road network with a connected graph $G = (V,E)$. Assume th
 
 In principle, in our application to the New York City taxi data, we may take $G$ to be a graph representing the exact road network in New York City, where each vertex is a \emph{road segment} and the directed edge $(i,j) \in E$ if one can drive directly onto road segment $j$ from road segment $i$; such a parameterization allows $w_i$ to be directly interpretable as a measure of congestion on road segment $i$. However, such a detailed construction presents serious computational challenges when training on a large dataset, since solving path-finding problems and computing minimal paths are nontrivially expensive.\footnote{Manhattan has on the order of $10^4$ road segments, and the dataset contains the order of $10^7$ trips for January 2009 alone.} 
 
-To avoid these challenges, we parameterize $G$ as an undirected rectangular grid. Despite not being able to pinpoint weights $w_i$ to congestion of specific road segments, we are nonetheless able to interpret the weights $w_i$ as representative of congestion on a small patch of land. We may now represent a path $Z\uppr{k}$ as a set of indices $i$ of grid points traversed by the path. In full generality, there are an infinite number of paths connecting any two points $i,j$ on the grid, but the vast majority of these paths are not sensible. Thus we restrict the set of possible paths for trip $k$ to a \emph{set of reasonable paths} $\bm Z\uppr{k}$, where each path in $\bm Z\uppr{k}$ travels strictly in the direction of the destination. For instance, if the destination of $j$ is to the northeast of the starting location $i$, then the set of reasonable paths $\bm Z$ are the set of paths that only involve northward or eastward movements (e.g.~Figure~\ref{fig:reasonable}).  
+To avoid these challenges, we parameterize $G$ as an undirected rectangular grid. Despite not being able to pinpoint weights $w_i$ to congestion of specific road segments, we are nonetheless able to interpret the weights $w_i$ as representative of congestion on a small patch of land. We may now represent a path $Z\uppr{k}$ as a set of indices $i$ of grid points traversed by the path. In full generality, there are an infinite number of paths connecting any two points $i,j$ on the grid, but the vast majority of these paths are not sensible. Thus we restrict the set of possible paths for trip $k$ to a \emph{set of reasonable paths} $\bm Z\uppr{k}$, where each path in $\bm Z\uppr{k}$ travels strictly in the direction of the destination. For instance, if the destination of $j$ is to the northeast of the starting location $i$, then the set of reasonable paths $\bm Z$ are the set of paths that only involve northward or eastward movements (e.g.~Figure~\ref{fig:reasonable} shows a reasonable path from $(0,0)$ to $(2,1)$). Such a parameterization is more general than many in the literature; \citet{zhan2013urban}, for instance, uses the $K$-shortest path algorithm and considers the shortest 20 paths as a set of reasonable paths.
 
 \begin{figure}[h]
 \centering
@@ -124,11 +128,21 @@ To avoid these challenges, we parameterize $G$ as an undirected rectangular grid
 \end{tikzpicture}
 \end{figure} 
 
-We have the following model: \begin{align*}
+We parameterize the conditional distribution of $T\uppr{k}$ as Normal, in the following reformulation of the directed graphical model: \begin{align*}
 \bm W &\sim p(\bm W) \\
 Z\uppr{k} &\sim p(Z\uppr{k} | \bm W) \\
 T\uppr{k} | \bm W, Z\uppr{k} &\sim \Norm\pr{\sum_{i\in Z\uppr{k}} w_i, \sigma^2},
 \end{align*}
+where $p(Z\uppr{k} | \bm W)$ is a distribution over $\bm Z^{\uppr{k}}$. We consider two different ways to parameterize $p(Z\uppr{k} | \bm W)$: softmax regression and uniform. In the \emph{softmax regression} model, a type of generalized linear model for discrete choice problems \cite{mcfadden1973conditional}, we parameterize the route choice such that \[
+p(Z\uppr{k}|\bm W) \propto \exp\pr{-\sum_{i\in Z\uppr{k}}w_i},
+\]
+in order to encode the fact that drivers avoid routes that take a long period of time. In the \emph{uniform} model, we simply assume that route choice is independent and uniform on the set of reasonable paths: \[
+p(Z\uppr{k}|\bm W) \propto 1.
+\]
+The uniform model trades off realism in modeling for improvement in computation and training, as we see in Section~\ref{sec:inference}.
+
+In our application to the Manhattan dataset, we perform MLE inference, or, equivalently, MAP inference with $p(\bm W) \propto 1$. In principle, it is not difficult to parameterize the prior of $\bm W$ as an undirected graphical model, since we need only to supply edge and unary potentials. For instance, to impose a correlated prior on $\bm W$, as suggested by some \cite{hunter2009path}, we simply penalize large differences in neighboring weights in the edge potential, effectively assuming a prior model that is similar to a continuous version of the Ising model. 
+
 
 
 {
@@ -162,7 +176,34 @@ This is also a good place to reference a diagram such as Figure~\ref{fig:diagram
 
 
 \section{Inference (or Training)}
+\label{sec:inference}
+We perform maximum likelihood inference, maximizing \[
+\max_{\bm W} \log p(\{T\uppr{k}\}_{k=1}^N|\bm W) = \max_{\bm W} \sum_{k=1}^N \log p(T\uppr{k} | \bm W).
+\]
+The log-likelihood is 
+\begin{align*}
+&\log p (T\uppr{k} | \bm W) \\
+=& \log\pr{\sum_{Z\uppr{k} \in \bm Z\uppr{k}} p(T\uppr{k}|Z\uppr{k},\bm W)p(Z\uppr{k}|\bm W)} \\
+=& \log\pr{\E_{Z\uppr{k}}\bk{p(T\uppr{k}|Z\uppr{k},\bm W)}}.
+\end{align*}
+The expectation is a sum of the size $|\bm Z\uppr{k}|,$ which, for an $m\times n$ trip\footnote{By an $m\times n$ trip, we mean a trip with east-west distance $n$ and north-south distance $m$}, is of $\binom{m+n}{n} \approx \frac{(n+m)^n}{n^n}e^n$ terms. Computing this expectation is the main inference challenge of our project.
 
+\subsection{Inference in the uniform model}
+
+By assuming the uniform model $p(Z|\bm W) \propto 1$, we gain the ability to work with an expectation over $\bm W$ instead of an expectation over $\bm Z$, since the probability that a particular weight is included in a path is readily computable from elementary combinatorics. We maximize an approximate lower bound of the log-likelihood by applications of Jensen's inequality: \begin{align*}
+\ell(\bm W) &= \log\pr{\E_{Z\uppr{k}}\bk{p(T\uppr{k}|Z\uppr{k},\bm W)}} \\
+&\ge -\frac{1}{2\sigma^2}\pr{T\uppr{k} - \E\bk{\sum_{i\in Z\uppr{k}} w_i}}^2 + \text{const.} \tag{$*$} \\
+&= -\frac{1}{2\sigma^2}\pr{T\uppr{k} - \sum_{i} w_i\pi_i}^2 + \text{const.},
+\end{align*}
+where $\pi_i$ is the marginal probability of node $i$ being included in a uniform route.\footnote{$\pi_i$ can be computed analytically. Suppose the source and destination of the trip are $(n,m)$ apart and vertex $i$ is $(a,b)$ away from the source. Then, by elementary combinatorics, \[\pi_i = \frac{\binom{a+b}{a}\binom{n+m-a-b}{n-a}}{\binom{n+m}{n}}\]} Note that $(*)$ is only a lower bound if $T\uppr{k} - \sum w_i$ is small compared to $\sigma^2$, since for small values of $T\uppr{k} - \sum w_i$ relative to $\sigma$, the Normal density is concave, and the inequality follows by Jensen's inequality. We indeed make this assumption. By assuming a structure of $Z|\bm W$, we gain a great deal of convenience in computation, effectively reducing a sum of $\binom{n+m}{n}$ terms to a sum of merely $nm$ terms. 
+ 
+ 
+\subsection{Inference in the softmax regression model}
+
+
+
+
+{\color{gray}
 \begin{itemize}
 \item How do you plan on training your parameters / inferring the
   states of your latent variables (MLE / MAP / Backprop / VI / EM / BP / ...)
@@ -180,7 +221,7 @@ This is also a good place to reference a diagram such as Figure~\ref{fig:diagram
   \end{algorithmic}
   \caption{Your Pseudocode}
 \end{algorithm}
-
+}
 
 
 
@@ -268,7 +309,7 @@ This is also a good place to reference a diagram such as Figure~\ref{fig:diagram
 % support.
 
 
-\bibliography{example}
+\bibliography{biblio.bib}
 \bibliographystyle{icml2017}
 
 \end{document}
