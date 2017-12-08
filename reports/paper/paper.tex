@@ -15,12 +15,12 @@
 \usetikzlibrary{bayesnet}
 \usepackage{jchen2}
 \usepackage[accepted]{icml2017}
-\icmltitlerunning{Project Title}
+\icmltitlerunning{Probabilistic Inference of NYC Congestion from Taxi Data}
 
 \begin{document}
 
 \twocolumn[
-\icmltitle{Project Title}
+\icmltitle{Probabilistic Inference of NYC Congestion from Taxi Data}
 \begin{icmlauthorlist}
   \icmlauthor{Jiafeng Chen}{}
 \icmlauthor{Yufeng Ling}{}
@@ -53,13 +53,60 @@ Example Structure:
 
 
 \section{Background}
+{
+\color{gray}
 Example Structure:
 \begin{itemize}
 \item What information does a non-expert need to know about the problem domain?
 \item What data exists for this problem?
 \item What are the challenges/opportunities inherent to the data? (High dimensional, sparse, missing data, noise, structure, discrete/continuous, etc?)
 \end{itemize}
+}
 
+The NYC Taxi and Limousine Commission (TLC) makes
+available\footnote{\url{http://www.nyc.gov/html/tlc/html/about/trip_record_data.shtml}}
+a dataset of taxi rides taken in the city. For our purposes, each ride is
+characterized by the time and location (latitude and longitude) of the pickup as
+well as the corresponding quantities for the drop-off\footnote{Additional
+information orthogonal to predicting trip duration---such as passenger
+counts and tip---is discarded}. Moreover, there is an abundance of data. In
+January of 2009 alone, there were over 14 million taxi rides recorded.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.5\textwidth]{figs/ridesbyhour.pdf}
+\caption{Taxi Trips by Time of Day}
+\label{fig:ridesbyhour}
+\end{figure}
+
+When we aggregate by hour of day (Figure \ref{fig:ridesbyhour}), we see some variance with anywhere between
+a hundred thousand and a million trips per interval. This is reassuring for
+future bucketing of the data. 
+
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.5\textwidth]{figs/tripdurations.pdf}
+\caption{Taxi Trips by Duration}
+\label{fig:tripdurations}
+\end{figure}
+
+While we are not lacking in data volume, two important challenges do appear when
+working with this dataset. The first is that the data set is not completely clean.
+Case in point, while most trip durations (Figure \ref{fig:tripdurations}) are
+reasonable for a taxi trip, just over 1\% of trips have a drop-off time that is
+before the pick-up time, making for a trip with negative duration. Furthermore,
+the longest trip has duration of just over 42 days. It is difficult to
+accurately assess
+the veracity of the pickup and dropoff coordinates, but we observe
+that some trips
+have geographic coordinates that place the start or end of the trip in the
+ocean.
+
+Additionally, whereas we would like to infer road conditions along the route of
+a taxi trip, we can only observe the start and end-points. The fact that the
+route taken is unobservable is primarily responsible for our inference
+challenges.
 
 
 \section{Related Work}
@@ -158,7 +205,8 @@ Example Structure:
 But it may also be a neural network, or a non-probabilistic loss,
 \[ h_t \gets \mathrm{RNN}(x_{t}, h_{t-1} )\]
 
-This is also a good place to reference a diagram such as Figure~\ref{fig:diagram}.
+% Commented out dangling reference --FR
+This is also a good place to reference a diagram such as %Figure~\ref{fig:diagram}.
 
 \item What are the parameters or latent variables of this model that you plan on estimating or inferring? Be explicit. How many are there? Which are you assuming are given? How do these relate to the original problem description?
 \end{itemize}
