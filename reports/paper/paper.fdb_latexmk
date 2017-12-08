@@ -1,12 +1,12 @@
 # Fdb version 3
-["bibtex paper"] 1512444945 "paper.aux" "paper.bbl" "paper" 1512448206
+["bibtex paper"] 1512701903 "paper.aux" "paper.bbl" "paper" 1512702123
   "./icml2017.bst" 1512338211 27013 a22056c781df1f50f320823587393d6a ""
-  "biblio.bib" 1512444683 885 d373e77e0dc344cc414acff69e150653 ""
-  "paper.aux" 1512448206 1492 d2d24d901d3a8a49d8a17fd1b0a47685 ""
+  "biblio.bib" 1512700352 1668 e358e1f24b77caa6a6550ff68a588d0c ""
+  "paper.aux" 1512702122 1912 ac3af6f710b807cd699817065e5a9c7b ""
   (generated)
   "paper.blg"
   "paper.bbl"
-["pdflatex"] 1512448204 "paper.tex" "paper.pdf" "paper" 1512448206
+["pdflatex"] 1512702121 "paper.tex" "paper.pdf" "paper" 1512702123
   "/Users/jiafengchen/Library/texmf/fonts/tfm/public/xypic/texfonts/xyatip10.tfm" 1381043914 608 50246cc71b0635b0ba0a5c10a0bf4257 ""
   "/Users/jiafengchen/Library/texmf/fonts/tfm/public/xypic/texfonts/xybsql10.tfm" 1381043914 608 4db60f15ea23b4ec2d796c6d568a63fa ""
   "/Users/jiafengchen/Library/texmf/fonts/tfm/public/xypic/texfonts/xybtip10.tfm" 1381043914 608 50246cc71b0635b0ba0a5c10a0bf4257 ""
@@ -93,6 +93,7 @@
   "/usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb" 1248133631 32587 1788b0c1c5b39540c96f5e42ccd6dae8 ""
   "/usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb" 1248133631 32716 08e384dc442464e7285e891af9f45947 ""
   "/usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb" 1248133631 32442 c975af247b6702f7ca0c299af3616b80 ""
+  "/usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmex7.pfb" 1248133631 30457 bc0868ebece724ed7c3d37e3d9bff7bd ""
   "/usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmex9.pfb" 1248133631 30212 b6aafa449db0097a6b9b890f66741063 ""
   "/usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmmib7.pfb" 1248133631 39386 0bb525d495ceab21fe797301a586e0d7 ""
   "/usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb" 1248133631 34694 ad62b13721ee8eda1dcc8993c8bd7041 ""
@@ -254,12 +255,12 @@
   "/usr/local/texlive/2016/texmf.cnf" 1463979140 577 2938757e76f31531e65cc647e3507693 ""
   "icml2017.sty" 1512338211 24142 53a2e41df7be654c6b29f7453024e399 ""
   "jchen2.sty" 1512418694 6588 bf24fe2101777acb6c5b4ba8d639f00e ""
-  "paper.aux" 1512448206 1492 d2d24d901d3a8a49d8a17fd1b0a47685 ""
-  "paper.bbl" 1512444946 1103 71b18dbe7d5bc820f95d78a75e690941 "bibtex paper"
-  "paper.out" 1512448205 0 d41d8cd98f00b204e9800998ecf8427e ""
-  "paper.tex" 1512448204 14124 774d54f0d8239568ebedf2da1ea632cf ""
+  "paper.aux" 1512702122 1912 ac3af6f710b807cd699817065e5a9c7b ""
+  "paper.bbl" 1512701903 1918 ba343f5623afa953335bfac8db9f2fc7 "bibtex paper"
+  "paper.out" 1512702122 0 d41d8cd98f00b204e9800998ecf8427e ""
+  "paper.tex" 1512702120 18449 d4a1b7ce1492d4b12ecd994f368e32b8 ""
   (generated)
   "paper.out"
   "paper.pdf"
-  "paper.log"
   "paper.aux"
+  "paper.log"
