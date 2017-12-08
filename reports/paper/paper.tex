@@ -310,17 +310,27 @@ where we sample uniformly and independently $\{\tilde Z_j\uppr{k}\}_{j=1}^L$.
 
 \section{Methods}
 
+{
+\color{gray}
 \begin{itemize}
 \item What are the exact details of the dataset that you used? (Number of data points / standard or non-standard / synthetic or real / exact form of the data)
 
 \item What are the exact details of the features you computed?
 
-
 \item How did you train or run inference? (Optimization method / hyperparameter settings / amount of time ran / what did you implement versus borrow / how were baselines computed).
 
 \item What are the exact details of the metric used?
 \end{itemize}
+}
 
+For our dataset, we started with the TLC dataset of all NYC taxi trips taken in
+January 2009. From the raw data, several computed columns were added.
+One-hot-encoded columns were added for hour of day (24 columns) as well as for
+day of the week (7 columns). The duration of the trip was also explicitly
+computed in seconds as the dependent variable to predict.
+
+In addition to adding columns, the original dataset was filtered. Geographic
+coordinates were\ldots
 
 
 \section{Results}
