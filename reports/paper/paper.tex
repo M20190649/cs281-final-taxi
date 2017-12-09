@@ -344,45 +344,40 @@ We conclude this section by briefly discussing prediction in our models. In the 
 \subsection{Data Processing}
 
 For our dataset, we started with the TLC dataset of all NYC taxi trips taken in
-January 2009. From the raw data, several computed columns were added.
-One-hot-encoded columns were added for hour of day (24 columns) as well as for
-day of the week (7 columns). The duration of the trip was also explicitly
-computed in seconds as the dependent variable to predict.
+January 2009. From the raw data, we added several computed columns.
+We one-hot-encoded columns for hour of day (24 columns) as well as for
+day of the week (7 columns). We also explicitly computed the duration of the trip  in seconds as the dependent variable to predict.
 
-In addition to adding columns, the original dataset was filtered. Only trips
-whose start and locations fell inside a rectangle that bounds Manhattan were
-considered. As a preliminary filtering, trips with duration less than 0 or
-greater than one day were removed. Upon training models, this was further
-culled to trips between two minutes and two hours in length.
+In addition to adding columns, we filtered the original dataset. We only consider trips
+whose start- and end-locations that falls inside a rectangle that bounds Manhattan. We also removed trips with duration less than two minutes or more than two hours.
 
-Principal component analysis was run on all de-meaned and
+We performed a principal component analysis on all de-meaned and
 standardized geographic coordinates (both start
-and end locations) from the filtered data. The coordinates were thus
-transformed into the first and second principal components. For the discrete
+and end locations) from the filtered data. We thus transform the coordinates into the first and second principal components. This allowed us to compute the rotational matrix so that Manhattan lies approximately orthogonal to the $x$-axis. For the discrete
 grid models, these coordinates were further discretized into a $20 \times 70$
-grid.
+grid. Each node in the grid approximately corresponds to a $400\text{ft} \times 400\text{ft}$ area. We chose the grid size as a compromise between computational tractability and model expressiveness.
 
-The data-set was saved as a whole, but also partioned into $(\text{day of week},
+We saved the dataset as a whole, and we also partitioned into $(\text{day of week},
 \text{hour})$ groups, using the one-hot encoded vectors. Some models were
-trained on the entire data-set (e.g.\ Neural Network), and some were trained
-individually on the partioned data-sets (e.g.\ Structural Models).
+trained on the entire dataset (e.g.\ Neural Network), and some were trained
+individually on the partioned datasets (e.g.\ Structural Models).
 
 \subsection{Baselines}
 
-Three baselines were calculated. The first was a linear regression predicting
+We calculated three baselines. The first was a linear regression predicting
 trip duration from trip distance (calculated using the Pythagorean Theorem and
 the start and end coordinates), and trained on a partitioned data set. 
 
 The second was a neural network trained on the
 entire dataset taking as input the start and end coordinates as well as the day
 of week and hour one-hot encoded vectors. The neural network had one hidden
-layer with 50 neurons and a tanh activation function.
+layer with 50 neurons and a $\tanh$ activation function.
 
-The second baseline was constructed by querying the Google Maps Distance Matrix
-API\footnote{\url{https://developers.google.com/maps/documentation/distance-matrix/}}.
+The third baseline was constructed by querying the Google Maps Distance Matrix
+API.\footnote{\url{https://developers.google.com/maps/documentation/distance-matrix/}}
 While there was no need to train this baseline, there was a rate limit
 constraint on how many test data points it could be tested on. We assess its
-performance on 2,500 data points in a representative partioned test data-set.
+performance on 2,500 data points in a representative partioned test dataset.
 
 \subsection{Training}
 
@@ -397,9 +392,9 @@ dataset corresponding to all trips on a given day of the week and on a given
 hour. Convergence appeared after roughly two epochs, and the model was run for 5
 epochs taking just under ten minutes.
 
-The softmax structural model was trained
-using the \texttt{Adam} optimizer with learning rate $10^{-2}$ for 10 epochs,
-taking approximately an hour.
+The softmax regression model was trained
+using the Adam optimizer \cite{kingma2014adam} with learning rate $10^{-2}$ for 10 epochs,
+taking approximately an hour. Additionally, the softmax regression model take hyperparameters $L$ (sample size in each stochastic draw) and $\sigma^2$ (variance of trip time). We chose $L = 20$ and $\sigma^2 = 100$. These values are again chosen to strike a bargain between realism and computation feasibility. 
 % TODO: jchen confirm this for me:
 
 \section{Results}
@@ -416,7 +411,7 @@ We train our model and test the model on an out-of-sample test-set using the met
 Table~\ref{tab:mainres} contains the main prediction results of our model relative to some benchmark predictions
 such as the Google Maps Distance Matrix API, neural network, and linear regression. 
 
-\begin{table*}
+\begin{table*}[h!]
 \centering
 \begin{threeparttable}
 \begin{tabular}{lrrrrr}
