@@ -1,0 +1,43 @@
+\begin{thebibliography}{6}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Blei et~al.(2017)Blei, Kucukelbir, and McAuliffe]{blei2017variational}
+Blei, David~M, Kucukelbir, Alp, and McAuliffe, Jon~D.
+\newblock Variational inference: A review for statisticians.
+\newblock \emph{Journal of the American Statistical Association}, \penalty0
+  (just-accepted), 2017.
+
+\bibitem[Dempster et~al.(1977)Dempster, Laird, and Rubin]{dempster1977maximum}
+Dempster, Arthur~P, Laird, Nan~M, and Rubin, Donald~B.
+\newblock Maximum likelihood from incomplete data via the em algorithm.
+\newblock \emph{Journal of the royal statistical society. Series B
+  (methodological)}, pp.\  1--38, 1977.
+
+\bibitem[Hunter et~al.(2009)Hunter, Herring, Abbeel, and Bayen]{hunter2009path}
+Hunter, Timothy, Herring, Ryan, Abbeel, Pieter, and Bayen, Alexandre.
+\newblock Path and travel time inference from gps probe vehicle data.
+\newblock \emph{NIPS Analyzing Networks and Learning with Graphs}, 12\penalty0
+  (1), 2009.
+
+\bibitem[Kingma \& Welling(2013)Kingma and Welling]{kingma2013auto}
+Kingma, Diederik~P and Welling, Max.
+\newblock Auto-encoding variational bayes.
+\newblock \emph{arXiv preprint arXiv:1312.6114}, 2013.
+
+\bibitem[McFadden et~al.(1973)]{mcfadden1973conditional}
+McFadden, Daniel et~al.
+\newblock Conditional logit analysis of qualitative choice behavior.
+\newblock 1973.
+
+\bibitem[Zhan et~al.(2013)Zhan, Hasan, Ukkusuri, and Kamga]{zhan2013urban}
+Zhan, Xianyuan, Hasan, Samiul, Ukkusuri, Satish~V, and Kamga, Camille.
+\newblock Urban link travel time estimation using large-scale taxi data with
+  partial information.
+\newblock \emph{Transportation Research Part C: Emerging Technologies},
+  33:\penalty0 37--49, 2013.
+
+\end{thebibliography}
