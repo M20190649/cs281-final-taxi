@@ -21,7 +21,7 @@ def test(predict, result_file,
     errs = pd.Series(errs)
 
     stat = {
-        'sd_duration' : df['duration'].std(),
+        'sd_duration' : df['duration'].std() / 60,
         'mean_err': errs.mean(),
         'sd_err': errs.std(),
         'mean_abs_err': errs.abs().mean(),
