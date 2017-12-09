@@ -1,12 +1,12 @@
 # Fdb version 3
-["bibtex paper"] 1512767690 "paper.aux" "paper.bbl" "paper" 1512767691
+["bibtex paper"] 1512792413 "paper.aux" "paper.bbl" "paper" 1512793730
   "./icml2017.bst" 1512338211 27013 a22056c781df1f50f320823587393d6a ""
   "biblio.bib" 1512700352 1668 e358e1f24b77caa6a6550ff68a588d0c ""
-  "paper.aux" 1512767691 2059 74a1f1447c1f905bd991a1d09d2f2ba4 ""
+  "paper.aux" 1512793730 2124 f349ed75a1e2315151480324720d4652 ""
   (generated)
-  "paper.bbl"
   "paper.blg"
-["pdflatex"] 1512767690 "paper.tex" "paper.pdf" "paper" 1512767691
+  "paper.bbl"
+["pdflatex"] 1512793728 "paper.tex" "paper.pdf" "paper" 1512793730
   "/Users/jiafengchen/Library/texmf/fonts/tfm/public/xypic/texfonts/xyatip10.tfm" 1381043914 608 50246cc71b0635b0ba0a5c10a0bf4257 ""
   "/Users/jiafengchen/Library/texmf/fonts/tfm/public/xypic/texfonts/xybsql10.tfm" 1381043914 608 4db60f15ea23b4ec2d796c6d568a63fa ""
   "/Users/jiafengchen/Library/texmf/fonts/tfm/public/xypic/texfonts/xybtip10.tfm" 1381043914 608 50246cc71b0635b0ba0a5c10a0bf4257 ""
@@ -262,12 +262,12 @@
   "figs/tripdurations.pdf" 1512767674 23460 235983954e20ab9d03391c159f96cf2c ""
   "icml2017.sty" 1512338211 24142 53a2e41df7be654c6b29f7453024e399 ""
   "jchen2.sty" 1512418694 6588 bf24fe2101777acb6c5b4ba8d639f00e ""
-  "paper.aux" 1512767691 2059 74a1f1447c1f905bd991a1d09d2f2ba4 ""
-  "paper.bbl" 1512767690 1918 ba343f5623afa953335bfac8db9f2fc7 "bibtex paper"
-  "paper.out" 1512767691 0 d41d8cd98f00b204e9800998ecf8427e ""
-  "paper.tex" 1512767674 21098 5efe0a655025beda03e160a4961e2628 ""
+  "paper.aux" 1512793730 2124 f349ed75a1e2315151480324720d4652 ""
+  "paper.bbl" 1512792413 1918 ba343f5623afa953335bfac8db9f2fc7 "bibtex paper"
+  "paper.out" 1512793730 0 d41d8cd98f00b204e9800998ecf8427e ""
+  "paper.tex" 1512792521 21696 416aa773d182efa71fd65edbaf972608 ""
   (generated)
-  "paper.aux"
   "paper.pdf"
   "paper.log"
+  "paper.aux"
   "paper.out"
