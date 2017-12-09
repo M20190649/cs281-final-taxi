@@ -309,7 +309,7 @@ where we sample uniformly and independently $\{\tilde Z_j\uppr{k}\}_{j=1}^L$. Th
 
 \subsection{Prediction}
 \label{sub:predict}
-We conclude this section by briefly discussing prediction in our models. In the uniform model, prediction is straightforward. We calculate the expected time $\hat T = \sum_i w_i \pi_i$, where $\pi_i$ is the marginal probability that node $i$ is included in a uniformly randomly chosen path. Computing prediction is slightly more subtle in the softmax regression model. 
+We conclude this section by briefly discussing prediction in our models. In the uniform model, prediction is straightforward. We calculate the expected time $\hat T = \sum_i w_i \pi_i$, where $\pi_i$ is the marginal probability that node $i$ is included in a uniformly randomly chosen path. Computing prediction is slightly more subtle in the softmax regression model. In the softmax regression model, we sample $L_{\text{pred}}$ uniformly chosen paths and take the weighted average of the sums of $w_i$ in each path, where the weights are proportional to $\exp(-\sum_{i \in Z} w_i)$ for path $Z$. 
 
 % {\color{gray}
 % \begin{itemize}
@@ -360,7 +360,7 @@ coordinates were\ldots
 \end{itemize}
 }
 
-We train our model and 
+We train our model and test the model on an out-of-sample test-set using the methods discussed in Section~\ref{sub:predict}. 
 
 Table~\ref{tab:mainres} contains the main prediction results of our model relative to some benchmark predictions
 such as the Google Maps Distance Matrix API, neural network, and linear regression. 
@@ -371,21 +371,25 @@ such as the Google Maps Distance Matrix API, neural network, and linear regressi
 \begin{tabular}{lrrrrr}
 \toprule
 & \multicolumn{3}{c}{Baseline} & \multicolumn{2}{c}{Model} \\\cmidrule(r){2-4} \cmidrule(l){5-6} 
-{} & Google Maps & Neural Network & Linear Regression & Uniform Model & Softmax Model \\
+{} & Google Maps & Neural Network\tnote{2} & Linear Regression\tnote{3} & Uniform Model & Softmax Model \\
 \midrule
-$\sd(T)$ & 7.40 & 6.85& &  6.22 & 6.22 \\ [1em]
-$\hat \E[\epsilon]$ & -0.83 &-0.07 & &  0.61 & 0.99 \\
-$\sd(\epsilon)$ & 4.98 & 3.88& &  4.28 & 4.28 \\[1em]
-$\hat \E[|\epsilon|]$ & 3.42 & 2.44& &  2.82 & 2.86 \\
-$\text{Median}(|\epsilon|)$ & 2.55 & 1.67& &  1.92 & 1.92 \\
-$\text{Percentile}(|\epsilon|, 99)$ & 16.54 &12.79 & &  14.72 & 15.24 \\ [1em]
-Test-set $R^2$ & 0.54 & 0.68&  & 0.53 & 0.53 \\
+$\sd(T)$ & 7.40 & 6.85& 6.13&  6.22 & 6.22 \\ [1em]
+$\hat \E[\epsilon]\tnote{1}$ & -0.83 &-0.07 & -0.05&  0.61 & 0.99 \\
+$\sd(\epsilon)$ & 4.98 & 3.88& 5.01&  4.28 & 4.28 \\[1em]
+$\hat \E[|\epsilon|]$ & 3.42 & 2.44& 3.60&  2.82 & 2.86 \\
+$\text{Median}(|\epsilon|)$ & 2.55 & 1.67& 2.93 &  1.92 & 1.92 \\
+$\text{Percentile}(|\epsilon|, 99)$ & 16.54 &12.79 & 16.62&  14.72 & 15.24 \\ [1em]
+Test-set\tnote{4}  \, $R^2$ & 0.54 & 0.68& 0.33 & 0.53 & 0.53 \\
 \bottomrule
 \end{tabular}
 \caption{Prediction results on test set}
 \label{tab:mainres}
 \begin{tablenotes}
-\item \textbf{Notes:} Here $\epsilon = (\text{Actual trip duration}) - (\text{Predicted duration})$ in minutes. $\hat \E$ denotes the sample mean. We restrict the test-set to 8:00--9:00 AM on Tuesdays in January 2009 for all models \emph{except} the neural network, for which we use an out-of-sample test set on the \emph{entire} range of trip times, since the neural network encodes time-of-day and day-of-week data. Test-set $R^2$ is calculated as \smash{$1-\frac{\var(\epsilon)}{\var(T)}$} on the underlying dataset being tested on. Note that for all but the linear regression, the test-set $R^2$ is an out-of-sample $R^2$, whereas the linear regression is trained on the test set, and thus the $R^2$ reported is in-sample.
+% \item[\textbf{Notes:}]
+\item[1] Here $\epsilon = (\text{Actual trip duration}) - (\text{Predicted duration})$ in minutes. $\hat \E$ denotes the sample mean. 
+\item[2] We restrict the test-set to 8:00--9:00 AM on Tuesdays in January 2009 for all models \emph{except} the neural network, for which we use an out-of-sample test set on the \emph{entire} range of trip times, since the neural network encodes time-of-day and day-of-week data. 
+\item[3]In linear regression, we simply regress $T$ on straight-line distance between the source and the destination.  
+\item[4] Test-set $R^2$ is calculated as \smash{$1-\frac{\var(\epsilon)}{\var(T)}$} on the underlying dataset being tested on. Note that the test-set $R^2$ is an out-of-sample $R^2$. 
 \end{tablenotes}
 \end{threeparttable}
 \end{table*}
