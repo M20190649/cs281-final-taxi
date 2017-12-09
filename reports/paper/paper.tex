@@ -10,7 +10,8 @@
 \usepackage{todonotes,tikz}
 \usepackage{cite}
 \usepackage{natbib}
-
+\usepackage{threeparttable}
+\newcommand{\sd}{\operatorname{SD}}
 
 \usetikzlibrary{bayesnet}
 \usepackage{jchen2}
@@ -287,18 +288,6 @@ where $\tilde Z$ is drawn uniformly from $\bm Z$. This is the same technique as 
 \end{align}
 where we sample uniformly and independently $\{\tilde Z_j\uppr{k}\}_{j=1}^L$. The pseudocode of the implementation is detailed in Algorithm~\ref{alg:main_alg}.
 
-
-{\color{gray}
-\begin{itemize}
-\item How do you plan on training your parameters / inferring the
-  states of your latent variables (MLE / MAP / Backprop / VI / EM / BP / ...)
-
-\item What are the assumptions implicit in this technique? Is it an approximation or exact? If it is an approximation what bound does it optimize?
-
-\item What is the explicit method / algorithm that you derive for learning these parameters?
-\end{itemize}
-
-}
 \begin{algorithm}
   \begin{algorithmic}
     \STATE{\COMMENT{Optimizing using \texttt{torch.optim.Adam}}}
@@ -316,6 +305,23 @@ where we sample uniformly and independently $\{\tilde Z_j\uppr{k}\}_{j=1}^L$. Th
   \caption{Training algorithm for softmax path selection}
   \label{alg:main_alg}
 \end{algorithm}
+
+
+\subsection{Prediction}
+\label{sub:predict}
+We conclude this section by briefly discussing prediction in our models. In the uniform model, prediction is straightforward. We calculate the expected time $\hat T = \sum_i w_i \pi_i$, where $\pi_i$ is the marginal probability that node $i$ is included in a uniformly randomly chosen path. Computing prediction is slightly more subtle in the softmax regression model. 
+
+% {\color{gray}
+% \begin{itemize}
+% \item How do you plan on training your parameters / inferring the
+%   states of your latent variables (MLE / MAP / Backprop / VI / EM / BP / ...)
+
+% \item What are the assumptions implicit in this technique? Is it an approximation or exact? If it is an approximation what bound does it optimize?
+
+% \item What is the explicit method / algorithm that you derive for learning these parameters?
+% \end{itemize}
+
+% }
 
 
 
@@ -347,18 +353,49 @@ coordinates were\ldots
 
 \section{Results}
 
-\begin{itemize}
+{\color{gray}\begin{itemize}
 \item What were the results comparing previous work / baseline systems / your systems on the main task?
 \item What were the secondary results comparing the variants of your system?
 \item This section should be fact based and relatively dry. What happened, what was significant?
 \end{itemize}
+}
+
+We train our model and 
+
+Table~\ref{tab:mainres} contains the main prediction results of our model relative to some benchmark predictions
+such as the Google Maps Distance Matrix API, neural network, and linear regression. 
 
 \begin{table*}
-  \centering
-  \missingfigure{}
-  \caption{This is usually a table. Tables with numbers are generally easier to read than graphs, so prefer when possible.}
-  \label{fig:mainres}
+\centering
+\begin{threeparttable}
+\begin{tabular}{lrrrrr}
+\toprule
+& \multicolumn{3}{c}{Baseline} & \multicolumn{2}{c}{Model} \\\cmidrule(r){2-4} \cmidrule(l){5-6} 
+{} & Google Maps & Neural Network & Linear Regression & Uniform Model & Softmax Model \\
+\midrule
+$\sd(T)$ & 7.40 & 6.85& &  6.22 & 6.22 \\ [1em]
+$\hat \E[\epsilon]$ & -0.83 &-0.07 & &  0.61 & 0.99 \\
+$\sd(\epsilon)$ & 4.98 & 3.88& &  4.28 & 4.28 \\[1em]
+$\hat \E[|\epsilon|]$ & 3.42 & 2.44& &  2.82 & 2.86 \\
+$\text{Median}(|\epsilon|)$ & 2.55 & 1.67& &  1.92 & 1.92 \\
+$\text{Percentile}(|\epsilon|, 99)$ & 16.54 &12.79 & &  14.72 & 15.24 \\ [1em]
+Test-set $R^2$ & 0.54 & 0.68&  & 0.53 & 0.53 \\
+\bottomrule
+\end{tabular}
+\caption{Prediction results on test set}
+\label{tab:mainres}
+\begin{tablenotes}
+\item \textbf{Notes:} Here $\epsilon = (\text{Actual trip duration}) - (\text{Predicted duration})$ in minutes. $\hat \E$ denotes the sample mean. We restrict the test-set to 8:00--9:00 AM on Tuesdays in January 2009 for all models \emph{except} the neural network, for which we use an out-of-sample test set on the \emph{entire} range of trip times, since the neural network encodes time-of-day and day-of-week data. Test-set $R^2$ is calculated as \smash{$1-\frac{\var(\epsilon)}{\var(T)}$} on the underlying dataset being tested on. Note that for all but the linear regression, the test-set $R^2$ is an out-of-sample $R^2$, whereas the linear regression is trained on the test set, and thus the $R^2$ reported is in-sample.
+\end{tablenotes}
+\end{threeparttable}
 \end{table*}
+
+
+
+
+
+
+
 
 
 % \begin{table}
