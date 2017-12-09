@@ -17,7 +17,7 @@ def test(predict, result_file,
             pred = predict(sx, sy, tx, ty)
             errs.append(duration - pred)
 
-    errs = pd.Series(errs)
+    errs = pd.Series(errs)/60
 
     stat = {
         'sd_duration' : df['duration'].std(),
@@ -29,7 +29,7 @@ def test(predict, result_file,
         'test_r2' : 1 - np.std(errs) ** 2 / (df['duration'].std() ** 2)
     }
 
-    json.dump(stat, open(result_file, 'w'))
-    pickle.dump(errs, open(result_file + '.raw', 'wb'))
+    json.dump(stat, open(result_file + '.json', 'w'))
+    pickle.dump(errs, open(result_file + '.pickle', 'wb'))
 
     return errs
