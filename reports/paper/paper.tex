@@ -280,10 +280,12 @@ Our inference strategy is based on a sampling-based approximating to the expecta
   \E_{Z}\bk{f(Z\uppr{k})} = |\bm Z\uppr{k}| \E_{\tilde Z}\bk{f(\tilde Z\uppr{k})p_Z(\tilde Z\uppr{k}|\bm W)},
 \end{equation}
 where $\tilde Z$ is drawn uniformly from $\bm Z$. This is the same technique as in importance sampling, except here the objective is to derive computationally tractable approximations, rather than maximizing the efficiency of the approximations. Exchanging $\log$ and expectation operator and applying \eqref{eq:trick} yields the following lower bound for negative log-likelihood, up to a constant,
-\begin{align*}
-&\frac{1}{2L\sigma^2}\sum_{j=1}^L \bk{T\uppr{k} + \sum_{i\in \tilde Z\uppr{k}_j}w_i}^2 - \frac{1}{L}\sum_{i=1}^L\sum_{i\in\tilde Z_{j}\uppr{k}}w_i \\&\qquad + \underset{i=1,\ldots,L}{\text{logsumexp}}\pr{-\sum_{\tilde Z_i} w_i},
-\end{align*}
-where we sample uniformly and independently $\{\tilde Z_j\uppr{k}\}_{j=1}^L$. 
+\begin{align}
+&\frac{1}{2L\sigma^2}\sum_{j=1}^L \bk{T\uppr{k} + \sum_{i\in \tilde Z\uppr{k}_j}w_i}^2 + \frac{1}{L}\sum_{i=1}^L\sum_{i\in\tilde Z_{j}\uppr{k}}w_i 
+\label{eq:softmax_objective}
+\\&\qquad + \underset{i=1,\ldots,L}{\text{logsumexp}}\pr{-\sum_{\tilde Z_i} w_i} \nonumber,
+\end{align}
+where we sample uniformly and independently $\{\tilde Z_j\uppr{k}\}_{j=1}^L$. The pseudocode of the implementation is detailed in Algorithm~\ref{alg:main_alg}.
 
 
 {\color{gray}
@@ -297,12 +299,22 @@ where we sample uniformly and independently $\{\tilde Z_j\uppr{k}\}_{j=1}^L$.
 \end{itemize}
 
 
-
 \begin{algorithm}
   \begin{algorithmic}
-    \STATE{}
+    \STATE{\COMMENT{Optimizing using Adam in PyTorch}}
+    
+    \FOR{trip $k$ in $1,\ldots,N$} \STATE {
+    Sample $L$ random paths uniformly.
+    
+    Compute the objective function as in~\eqref{eq:softmax_objective} for observation $k$.
+    
+    Compute the gradients of the objective function with respect to $\bm W$.
+    
+    Update $\bm W$.
+    } \ENDFOR
   \end{algorithmic}
-  \caption{Your Pseudocode}
+  \caption{Training algorithm for softmax path selection}
+  \label{alg:main_alg}
 \end{algorithm}
 }
 
