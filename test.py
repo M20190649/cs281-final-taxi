@@ -11,9 +11,11 @@ def test(predict, result_file,
 
 
     errs = []
-    for _, duration, sx, sy, tx, ty in tqdm(df.itertuples()):
-        pred = predict(sx, sy, tx, ty)
-        errs.append(duration - pred)
+    with tqdm(total=len(df)) as pbar:
+        for _, duration, sx, sy, tx, ty in (df.itertuples()):
+            pbar.update(1)
+            pred = predict(sx, sy, tx, ty)
+            errs.append(duration - pred)
 
     errs = pd.Series(errs)
 
