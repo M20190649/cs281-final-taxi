@@ -5,7 +5,7 @@
 \usepackage{subfigure}
 \usepackage{natbib}
 \usepackage{algorithm}
-\usepackage{algorithmic}
+\usepackage{algorithmic,inconsolata}
 \usepackage{lipsum}
 \usepackage{todonotes,tikz}
 \usepackage{cite}
@@ -124,7 +124,7 @@ Example Structure:
 
 \section{Model}
 
-We represent a city's road network with a connected graph $G = (V,E)$. Assume that each vertex $i \in V$ is associated with a weight $w_i$, representing the cost of traversing vertex $i$. A trip is represented by a path in $G$, and the distribution of the trip's duration depends on the weights $w_i$ of vertices included in the path. Note that the choice of the path can in general depend on the collection of weights $\bm W$. In full generality, the model is represented by Figure~\ref{fig:dgm}, where trips in the data are indexed by $(k)$, $T\uppr{k}$ is the observed trip duration, and $Z\uppr{k}$ is the path taken by trip $k$, a latent variable. Our primary interest is to perform inference on $\bm W$, so as to learn the levels of congestion associated with each vertex in $G$.
+We represent a city's road network with a connected graph $G = (V,E)$. Assume that each vertex $i \in V$ is associated with a weight $w_i$, representing the cost of traversing vertex $i$. A trip is represented by a path in $G$, and the distribution of the trip's duration depends on the weights $w_i$ of vertices included in the path. Note that the choice of the path can in general depend on the collection of weights $\bm W$. In full generality, the model is represented by Figure~\ref{fig:dgm}, where trips in the data are indexed by $(k)$, $T\uppr{k}$ is the observed trip duration, and $Z\uppr{k}$ is the path taken by trip $k$, a latent variable. Our primary interest is to perform inference on $\bm W$, so as to learn the levels of congestion associated with each vertex in $G$. 
 
 \begin{figure}[h]
   \centering
@@ -298,10 +298,10 @@ where we sample uniformly and independently $\{\tilde Z_j\uppr{k}\}_{j=1}^L$. Th
 \item What is the explicit method / algorithm that you derive for learning these parameters?
 \end{itemize}
 
-
+}
 \begin{algorithm}
   \begin{algorithmic}
-    \STATE{\COMMENT{Optimizing using Adam in PyTorch}}
+    \STATE{\COMMENT{Optimizing using \texttt{torch.optim.Adam}}}
     
     \FOR{trip $k$ in $1,\ldots,N$} \STATE {
     Sample $L$ random paths uniformly.
@@ -316,7 +316,7 @@ where we sample uniformly and independently $\{\tilde Z_j\uppr{k}\}_{j=1}^L$. Th
   \caption{Training algorithm for softmax path selection}
   \label{alg:main_alg}
 \end{algorithm}
-}
+
 
 
 
