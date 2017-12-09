@@ -7,6 +7,7 @@ import pickle
 def test(predict, result_file,
          test_file="data/split_test/JC_week1_hour8_test_40x140.csv"):
     df = pd.read_csv(test_file)
+    df['duration'] = df['duration'] / 60
     df = df.loc[:, ['duration', 'sx', 'sy', 'tx', 'ty']]
 
 
@@ -14,13 +15,13 @@ def test(predict, result_file,
     with tqdm(total=len(df)) as pbar:
         for _, duration, sx, sy, tx, ty in (df.itertuples()):
             pbar.update(1)
-            pred = predict(sx, sy, tx, ty)
+            pred = predict(sx, sy, tx, ty) / 60
             errs.append(duration - pred)
 
-    errs = pd.Series(errs)/60
+    errs = pd.Series(errs)
 
     stat = {
-        'sd_duration' : df['duration'].std() / 60,
+        'sd_duration' : df['duration'].std(),
         'mean_err': errs.mean(),
         'sd_err': errs.std(),
         'mean_abs_err': errs.abs().mean(),
