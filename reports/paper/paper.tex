@@ -53,15 +53,15 @@ Example Structure:
 
 
 \section{Background}
-{
-\color{gray}
-Example Structure:
-\begin{itemize}
-\item What information does a non-expert need to know about the problem domain?
-\item What data exists for this problem?
-\item What are the challenges/opportunities inherent to the data? (High dimensional, sparse, missing data, noise, structure, discrete/continuous, etc?)
-\end{itemize}
-}
+% {
+% \color{gray}
+% Example Structure:
+% \begin{itemize}
+% \item What information does a non-expert need to know about the problem domain?
+% \item What data exists for this problem?
+% \item What are the challenges/opportunities inherent to the data? (High dimensional, sparse, missing data, noise, structure, discrete/continuous, etc?)
+% \end{itemize}
+% }
 
 The NYC Taxi and Limousine Commission (TLC) makes
 available\footnote{\url{http://www.nyc.gov/html/tlc/html/about/trip_record_data.shtml}}
@@ -192,25 +192,25 @@ In our application to the Manhattan dataset, we perform MLE inference, or, equiv
 
 
 
-{
-\color{gray}
-Example Structure:
-
-\begin{itemize}
-\item What is the formal definition of your problem?
-\item What is the precise mathematical model you are using to represent it? In almost all cases this will use the probabilistic language from class, e.g.
-  \begin{equation}
-  z \sim {\cal N}(0, \sigma^2)\label{eq:1}
-\end{equation}
-But it may also be a neural network, or a non-probabilistic loss,
-\[ h_t \gets \mathrm{RNN}(x_{t}, h_{t-1} )\]
-
-% Commented out dangling reference --FR
-This is also a good place to reference a diagram such as %Figure~\ref{fig:diagram}.
-
-\item What are the parameters or latent variables of this model that you plan on estimating or inferring? Be explicit. How many are there? Which are you assuming are given? How do these relate to the original problem description?
-\end{itemize}
-}
+% {
+% \color{gray}
+% Example Structure:
+% 
+% \begin{itemize}
+% \item What is the formal definition of your problem?
+% \item What is the precise mathematical model you are using to represent it? In almost all cases this will use the probabilistic language from class, e.g.
+%   \begin{equation}
+%   z \sim {\cal N}(0, \sigma^2)\label{eq:1}
+% \end{equation}
+% But it may also be a neural network, or a non-probabilistic loss,
+% \[ h_t \gets \mathrm{RNN}(x_{t}, h_{t-1} )\]
+% 
+% % Commented out dangling reference --FR
+% This is also a good place to reference a diagram such as %Figure~\ref{fig:diagram}.
+% 
+% \item What are the parameters or latent variables of this model that you plan on estimating or inferring? Be explicit. How many are there? Which are you assuming are given? How do these relate to the original problem description?
+% \end{itemize}
+% }
 
 
 
@@ -310,18 +310,18 @@ where we sample uniformly and independently $\{\tilde Z_j\uppr{k}\}_{j=1}^L$.
 
 \section{Methods}
 
-{
-\color{gray}
-\begin{itemize}
-\item What are the exact details of the dataset that you used? (Number of data points / standard or non-standard / synthetic or real / exact form of the data)
-
-\item What are the exact details of the features you computed?
-
-\item How did you train or run inference? (Optimization method / hyperparameter settings / amount of time ran / what did you implement versus borrow / how were baselines computed).
-
-\item What are the exact details of the metric used?
-\end{itemize}
-}
+% {
+% \color{gray}
+% \begin{itemize}
+% \item What are the exact details of the dataset that you used? (Number of data points / standard or non-standard / synthetic or real / exact form of the data)
+% 
+% \item What are the exact details of the features you computed?
+% 
+% \item How did you train or run inference? (Optimization method / hyperparameter settings / amount of time ran / what did you implement versus borrow / how were baselines computed).
+% 
+% \item What are the exact details of the metric used?
+% \end{itemize}
+% }
 
 For our dataset, we started with the TLC dataset of all NYC taxi trips taken in
 January 2009. From the raw data, several computed columns were added.
