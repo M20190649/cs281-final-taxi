@@ -341,15 +341,66 @@ We conclude this section by briefly discussing prediction in our models. In the 
 % \end{itemize}
 % }
 
+\subsection{Data Processing}
+
 For our dataset, we started with the TLC dataset of all NYC taxi trips taken in
 January 2009. From the raw data, several computed columns were added.
 One-hot-encoded columns were added for hour of day (24 columns) as well as for
 day of the week (7 columns). The duration of the trip was also explicitly
 computed in seconds as the dependent variable to predict.
 
-In addition to adding columns, the original dataset was filtered. Geographic
-coordinates were\ldots
+In addition to adding columns, the original dataset was filtered. Only trips
+whose start and locations fell inside a rectangle that bounds Manhattan were
+considered. As a preliminary filtering, trips with duration less than 0 or
+greater than one day were removed. Upon training models, this was further
+culled to trips between two minutes and two hours in length.
 
+Principal component analysis was run on all de-meaned and
+standardized geographic coordinates (both start
+and end locations) from the filtered data. The coordinates were thus
+transformed into the first and second principal components. For the discrete
+grid models, these coordinates were further discretized into a $20 \times 70$
+grid.
+
+The data-set was saved as a whole, but also partioned into $(\text{day of week},
+\text{hour})$ groups, using the one-hot encoded vectors. Some models were
+trained on the entire data-set (e.g.\ Neural Network), and some were trained
+individually on the partioned data-sets (e.g.\ Structural Models).
+
+\subsection{Baselines}
+
+Three baselines were calculated. The first was a linear regression predicting
+trip duration from trip distance (calculated using the Pythagorean Theorem and
+the start and end coordinates), and trained on a partitioned data set. 
+
+The second was a neural network trained on the
+entire dataset taking as input the start and end coordinates as well as the day
+of week and hour one-hot encoded vectors. The neural network had one hidden
+layer with 50 neurons and a tanh activation function.
+
+The second baseline was constructed by querying the Google Maps Distance Matrix
+API\footnote{\url{https://developers.google.com/maps/documentation/distance-matrix/}}.
+While there was no need to train this baseline, there was a rate limit
+constraint on how many test data points it could be tested on. We assess its
+performance on 2,500 data points in a representative partioned test data-set.
+
+\subsection{Training}
+
+Training implementations varied from model to model. In training the neural
+network baseline, SGD was used with a learning rate of $10^{-7}$ run for 12
+epochs on the full data set. This took between 30 minutes and an hour. The
+uniform paths structural model was similarly trained with SGD, with a learning
+rate of $10^{-4}$. 
+
+The uniform model was only trained on a subset of the
+dataset corresponding to all trips on a given day of the week and on a given
+hour. Convergence appeared after roughly two epochs, and the model was run for 5
+epochs taking just under ten minutes.
+
+The softmax structural model was trained
+using the \texttt{Adam} optimizer with learning rate $10^{-2}$ for 10 epochs,
+taking approximately an hour.
+% TODO: jchen confirm this for me:
 
 \section{Results}
 
