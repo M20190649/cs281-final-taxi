@@ -7,3 +7,4 @@ data/*
 *aux
 *fls
 *fdb_latexmk
+*out
