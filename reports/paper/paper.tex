@@ -119,8 +119,11 @@ Example Structure:
 \item How do you plan to compare to these methods?
 \end{itemize}
 
+Travel time prediction has historically been a topic of research interest. On the topic of freeway travel time prediction, \cite{van2002freeway} proposed a Recurrent Neural Network (RNN) approach in order to address the temporal aspect of traffic prediction; \cite{wu2004travel} adopted the Supportive Vector Regression (SVR) method applied to time-seires analysis and reduced prediction errors in cases where previous methods generate especially large errors. We notice that earlier papers share the common feature of using freeway data for training and prediction, which probably arised from the limited availability of GPS data sources. Nevertheless, we realize that even for freeways, which in general have less traffic conditions than city roads, there is evidence that there exists a high level of non-linearity in the data, which contributes to the good performance of models such as RNN and SVR.
 
+With the ubiquity of taxi GPS data, recent work focused on estimating the traffic conditions in cities using sparce probe data and used travel time predictions as the metric as the performance of the model. \cite{hunter2009path} uses a Bayesian framework and used an expectation maximization algorithm that simultaneously learns the likely paths taken by probe vehicles as well as the travel time distributions through the network; \cite{herring2010estimating} used a Coupled Hidden Markov Model (CHMM) and determines the most likely path by allocating the travel time between two consecutive location observations to roads in the `M' step.
 
+One thing that distinguishes our attempt to the previous work is that we have much more missing information. Instead of sparse probe data, we are only working with start and end locations, which presents much more challenges in actual path inference and parameter optimization. \cite{zhan2013urban} provided some very helpful insights since it used the same TLC dataset of taxi ride. It contructed a faithful representation of the manhattan streets network, but limited the discussion to a much smaller district in Manhattan to reduce computational complexity.
 
 \section{Model}
 
