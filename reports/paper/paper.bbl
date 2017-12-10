@@ -1,4 +1,4 @@
-\begin{thebibliography}{7}
+\begin{thebibliography}{10}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -16,6 +16,13 @@ Dempster, Arthur~P, Laird, Nan~M, and Rubin, Donald~B.
 \newblock Maximum likelihood from incomplete data via the em algorithm.
 \newblock \emph{Journal of the royal statistical society. Series B
   (methodological)}, pp.\  1--38, 1977.
+
+\bibitem[Herring et~al.(2010)Herring, Hofleitner, Abbeel, and
+  Bayen]{herring2010estimating}
+Herring, Ryan, Hofleitner, Aude, Abbeel, Pieter, and Bayen, Alexandre.
+\newblock Estimating arterial traffic conditions using sparse probe data.
+\newblock In \emph{Intelligent Transportation Systems (ITSC), 2010 13th
+  International IEEE Conference on}, pp.\  929--936. IEEE, 2010.
 
 \bibitem[Hunter et~al.(2009)Hunter, Herring, Abbeel, and Bayen]{hunter2009path}
 Hunter, Timothy, Herring, Ryan, Abbeel, Pieter, and Bayen, Alexandre.
@@ -37,6 +44,20 @@ Kingma, Diederik~P and Welling, Max.
 McFadden, Daniel et~al.
 \newblock Conditional logit analysis of qualitative choice behavior.
 \newblock 1973.
+
+\bibitem[Van~Lint et~al.(2002)Van~Lint, Hoogendoorn, and
+  Van~Zuylen]{van2002freeway}
+Van~Lint, J, Hoogendoorn, S, and Van~Zuylen, H.
+\newblock Freeway travel time prediction with state-space neural networks:
+  modeling state-space dynamics with recurrent neural networks.
+\newblock \emph{Transportation Research Record: Journal of the Transportation
+  Research Board}, \penalty0 (1811):\penalty0 30--39, 2002.
+
+\bibitem[Wu et~al.(2004)Wu, Ho, and Lee]{wu2004travel}
+Wu, Chun-Hsin, Ho, Jan-Ming, and Lee, Der-Tsai.
+\newblock Travel-time prediction with support vector regression.
+\newblock \emph{IEEE transactions on intelligent transportation systems},
+  5\penalty0 (4):\penalty0 276--281, 2004.
 
 \bibitem[Zhan et~al.(2013)Zhan, Hasan, Ukkusuri, and Kamga]{zhan2013urban}
 Zhan, Xianyuan, Hasan, Samiul, Ukkusuri, Satish~V, and Kamga, Camille.

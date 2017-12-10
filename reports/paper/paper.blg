@@ -5,45 +5,46 @@ The style file: icml2017.bst
 Database file #1: biblio.bib.bib
 Warning--there's a number but no volume in blei2017variational
 Warning--empty journal in mcfadden1973conditional
-You've used 7 entries,
+Warning--there's a number but no volume in van2002freeway
+You've used 10 entries,
             2773 wiz_defined-function locations,
-            635 strings with 6107 characters,
-and the built_in function-call counts, 3068 in all, are:
-= -- 263
-> -- 200
-< -- 4
-+ -- 67
-- -- 60
-* -- 244
-:= -- 490
-add.period$ -- 21
-call.type$ -- 7
-change.case$ -- 40
-chr.to.int$ -- 7
-cite$ -- 16
-duplicate$ -- 144
-empty$ -- 234
-format.name$ -- 72
-if$ -- 630
+            657 strings with 6878 characters,
+and the built_in function-call counts, 4750 in all, are:
+= -- 419
+> -- 299
+< -- 5
++ -- 100
+- -- 90
+* -- 392
+:= -- 737
+add.period$ -- 31
+call.type$ -- 10
+change.case$ -- 59
+chr.to.int$ -- 10
+cite$ -- 23
+duplicate$ -- 219
+empty$ -- 368
+format.name$ -- 105
+if$ -- 989
 int.to.chr$ -- 1
 int.to.str$ -- 1
-missing$ -- 7
-newline$ -- 43
-num.names$ -- 28
-pop$ -- 76
+missing$ -- 10
+newline$ -- 58
+num.names$ -- 40
+pop$ -- 114
 preamble$ -- 1
-purify$ -- 33
+purify$ -- 49
 quote$ -- 0
-skip$ -- 116
+skip$ -- 171
 stack$ -- 0
-substring$ -- 52
-swap$ -- 11
-text.length$ -- 1
+substring$ -- 134
+swap$ -- 24
+text.length$ -- 2
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 77
-warning$ -- 2
-while$ -- 26
+type$ -- 110
+warning$ -- 3
+while$ -- 42
 width$ -- 0
-write$ -- 94
-(There were 2 warnings)
+write$ -- 134
+(There were 3 warnings)
