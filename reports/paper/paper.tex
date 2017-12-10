@@ -23,7 +23,7 @@
 \twocolumn[
 \icmltitle{Probabilistic Inference of NYC Congestion from Taxi Data}
 \begin{icmlauthorlist}
-  \icmlauthor{Jiafeng Chen}{}
+\icmlauthor{Jiafeng Chen}{}
 \icmlauthor{Yufeng Ling}{}
 \icmlauthor{Francisco Rivera}{}
 \end{icmlauthorlist}
@@ -381,7 +381,7 @@ The third baseline was constructed by querying the Google Maps Distance Matrix
 API.\footnote{\url{https://developers.google.com/maps/documentation/distance-matrix/}}
 While there was no need to train this baseline, there was a rate limit
 constraint on how many test data points it could be tested on. We assess its
-performance on 2,500 data points in a representative partioned test dataset.
+performance on approximately 2,500 data points in a representative partioned test dataset. Moreover, Google Maps API does not allow predicting travel time in the past, and thus for each trip, we use a random Tuesday 8:00 AM in January 2018 as a proxy. From our tests, the predictions of Google Maps API are not significantly different, whether the user submits a start time or not. Thus, we believe that this is a reasonable approximation given limitations to the data.
 
 \subsection{Training}
 
@@ -397,8 +397,8 @@ hour. Convergence appeared after roughly two epochs, and the model was run for 5
 epochs taking just under ten minutes.
 
 The softmax regression model was trained
-using the Adam optimizer \cite{kingma2014adam} with learning rate $10^{-2}$ for 10 epochs,
-taking approximately an hour. Additionally, the softmax regression model take hyperparameters $L$ (sample size in each stochastic draw) and $\sigma^2$ (variance of trip time). We chose $L = 20$ and $\sigma^2 = 100$. These values are again chosen to strike a bargain between realism and computation feasibility. The model appears to converge by the second epoch. 
+using the Adam optimizer \cite{kingma2014adam} with learning rate $5\times 10^{-3}$ for various epochs for different data-subsets,\footnote{The epochs are calculated so that the total numbers of trips trained by the model are approximately constant across the subsets of data. This means that we trained for 131 epochs for 4:00 AM but only 6 epochs for 8:00 AM, since the two data-subsets have drastically different number of trips. Nonetheless, as Figure~\ref{fig:softmaxloss} shows, we reached convergence in each dataset we trained on.}
+taking approximately thirty minutes for each data-subset. Additionally, the softmax regression model take hyperparameters $L$ (sample size in each stochastic draw) and $\sigma^2$ (variance of trip time). We chose $L = 20$ and $\sigma^2 = 100$. These values are again chosen to strike a bargain between realism and computation feasibility. The model appears to converge by the second epoch. 
 
 \section{Results}
 \label{sec:results}
