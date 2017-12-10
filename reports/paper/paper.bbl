@@ -1,4 +1,4 @@
-\begin{thebibliography}{10}
+\begin{thebibliography}{11}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -16,6 +16,13 @@ Dempster, Arthur~P, Laird, Nan~M, and Rubin, Donald~B.
 \newblock Maximum likelihood from incomplete data via the em algorithm.
 \newblock \emph{Journal of the royal statistical society. Series B
   (methodological)}, pp.\  1--38, 1977.
+
+\bibitem[Gelman et~al.(2014)Gelman, Carlin, Stern, Dunson, Vehtari, and
+  Rubin]{gelman2014bayesian}
+Gelman, Andrew, Carlin, John~B, Stern, Hal~S, Dunson, David~B, Vehtari, Aki,
+  and Rubin, Donald~B.
+\newblock \emph{Bayesian data analysis}, volume~2.
+\newblock CRC press Boca Raton, FL, 2014.
 
 \bibitem[Herring et~al.(2010)Herring, Hofleitner, Abbeel, and
   Bayen]{herring2010estimating}
