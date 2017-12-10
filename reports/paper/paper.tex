@@ -38,7 +38,7 @@
 % \item Length is a hard constraint. You are only allowed max \textbf{8 pages} in this format. While you can include supplementary material, it will not be factored into the grading process. It is your responsibility to convey the main contributions of the work in the length given.
 %   \end{itemize}
 
-Using the New York City Taxi and Limousine Commission (TLC) database of taxi rides, we develop a probabilistic model of transportation in New York City. By discretizing the Manhattan geography into a grid structure and by using a mixture model with the latent variable being the route chosen by the driver, we devise a model with a parsimonious number of parameters that is easy to implement even for a large city, fast to estimate, and yields reasonable prediction results relative to benchmarks of Google Maps, linear regression, and neural network. Moreover, the parameters of the model can be directly interpreted and visualized as measures of congestion on Manhattan's road network.
+Using the New York City Taxi and Limousine Commission (TLC) database of taxi rides, we develop a probabilistic model of transportation in New York City. By discretizing the Manhattan geography into a grid structure and by using a mixture model with the latent variable being the route chosen by the driver, we devise a model with a parsimonious number of parameters. Our model is easy to implement even for a large city, fast to estimate, and yields reasonable prediction results relative to benchmarks of Google Maps, linear regression, and neural network. Moreover, the parameters of the model can be directly interpreted and visualized as measures of congestion on Manhattan's road network.
 \end{abstract}
 
 \section{Introduction}
@@ -46,7 +46,7 @@ Using the New York City Taxi and Limousine Commission (TLC) database of taxi rid
 
 Estimating congestion and predicting trip time are important problems in urban economics, civil engineering, and operations research. The problem lends well to approaches in computational probabilistic inference and machine learning, thanks to the increasing availability of GPS data. Non-probabilistic machine learning methods, such as neural networks, perform extremely well in prediction, but generate parameters that do not have structural interpretations. On the other hand, current probabilistic methods, most of which are based on mixture models, either rely on extremely granular data such as closely spaced GPS measurements \cite{hunter2009path} or are difficult to scale to a large geographical area \cite{zhan2013urban}. 
 
-Our main contribution in this project is devising a stylized probabilistic model of travel, congestion, and route choice and creating two strategies of parameterization and approximate inference. From a data standpoint, our model does not require extremely granular data---training on a large dataset of taxi rides in New York City that only includes start- and end-trip locations. From an implementation standpoint, our model is parsimonious, scalable to large geographical areas and large datasets, and easy to train. From a prediction standpoint, our model is close to or outperforms many baseline metrics, such as neural network, linear regression, or Google Maps. In stark contrast with black-box methods, our model generates interpretable parameters that directly corresponds to level of congestion in a small area. We believe the ability to generate easily interpretable parameters is the foremost of our contributions, as it is transparent and accessible to a broad class of users---leading to, for instance, better urban planning and transportation design by policymakers.
+Our main contribution in this project is devising a stylized probabilistic model of travel, congestion, and route choice and creating two strategies of parameterization and approximate inference. From a data standpoint, our model does not require extremely granular data---training on a large dataset of taxi rides in New York City that only includes start- and end-trip locations. From an implementation standpoint, our model is parsimonious, scalable to large geographical areas and large datasets, and easy to train. From a prediction standpoint, our model is close to or outperforms many baseline metrics, such as neural networks, linear regression, or Google Maps. In stark contrast with black-box methods, our model generates interpretable parameters that directly corresponds to level of congestion in a small area. We believe the ability to generate easily interpretable parameters is the foremost of our contributions, as it is transparent and accessible to a broad class of users---leading to, for instance, better urban planning and transportation design by policymakers.
 
 This report proceeds as follows. Sections~\ref{sec:backgrd} and \ref{sec:related} briefly discuss some features of the data and some work in the previous literature. Section~\ref{sec:model} introduces our modeling framework formally and Section~\ref{sec:inference} introduces two methods for approximate inference of our model. Sections~\ref{sec:methods} and \ref{sec:results} discuss training on the TLC dataset and present predictive metrics of the training results relative to baseline. Section~\ref{sec:discuss} discusses the results and the accompanying visualization of parameters, while addressing issues of concern and of future inquiry. Section~\ref{sec:conc} concludes. 
 
@@ -66,9 +66,9 @@ The NYC Taxi and Limousine Commission (TLC) makes
 available\footnote{\url{http://www.nyc.gov/html/tlc/html/about/trip_record_data.shtml}}
 a dataset of taxi rides taken in the city. For our purposes, each ride is
 characterized by the time and location (latitude and longitude) of the pickup as
-well as the corresponding quantities for the drop-off\footnote{Additional
+well as the corresponding quantities for the drop-off.\footnote{Additional
 information orthogonal to predicting trip duration---such as passenger
-counts and tip---is discarded}. Moreover, there is an abundance of data. In
+counts and tip---is discarded} Moreover, there is an abundance of data. In
 January of 2009 alone, there were over 14 million taxi rides recorded.
 
 \begin{figure}[h]
@@ -94,7 +94,7 @@ While we are not lacking in data volume, two important challenges do appear when
 working with this dataset. The first is that the data set is not completely clean.
 Case in point, while most trip durations (Figure \ref{fig:tripdurations}) are
 reasonable for a taxi trip, just over 1\% of trips have a drop-off time that is
-before the pick-up time, making for a trip with negative duration. Furthermore,
+\emph{before} the pick-up time, making for a trip with negative duration. Furthermore,
 the longest trip has duration of just over 42 days. It is difficult to
 accurately assess
 the veracity of the pickup and dropoff coordinates, but we observe
@@ -103,9 +103,8 @@ have geographic coordinates that place the start or end of the trip in the
 ocean.
 
 Additionally, whereas we would like to infer road conditions along the route of
-a taxi trip, we can only observe the start and end-points. The fact that the
-route taken is unobservable is primarily responsible for our inference
-challenges.
+a taxi trip, we can only observe the start- and end-points. Therefore, our main inference challenge is the latent route choice of each trip.
+
 
 
 \section{Related Work}
@@ -119,11 +118,11 @@ challenges.
 % \item How do you plan to compare to these methods?
 % \end{itemize}
 
-Travel time prediction has historically been a topic of research interest. On a problem of freeway travel time prediction, \citet*{van2002freeway} proposed a Recurrent Neural Network (RNN) approach in order to address the temporal aspect of traffic prediction; \citet*{wu2004travel} adopted the Supportive Vector Regression (SVR) method applied to time-series analysis and reduced prediction errors in cases where previous methods generate especially large errors. We notice that earlier papers share the common feature of using freeway data for training and prediction, which probably arises from the limited availability of GPS data sources. Nevertheless, we realize that even for freeways, which in general have less congestion than city roads, there is evidence that there exists a high level of non-linearity in the data, which contributes to the good performance of models such as RNN and SVR.
+Travel time prediction has historically been a topic of research interest. On a problem of freeway travel time prediction, \citet*{van2002freeway} proposed a Recurrent Neural Network (RNN) approach in order to address the temporal aspect of traffic prediction; \citet*{wu2004travel} adopted the Support Vector Regression (SVR) method applied to time-series analysis and reduced prediction errors in cases where previous methods generate especially large errors. We notice that earlier papers used freeway data for training and prediction, which probably arises from the limited availability of GPS data sources. Nevertheless, we realize that even for freeways, which in general have less congestion than city roads, there is evidence of non-linearity in the data, which contributes to the good performance of models such as RNN and SVR.
 
-With the ubiquity of taxi GPS data, recent work focused on estimating the traffic conditions in cities using sparse probe data---a time series of closely spaced GPS location data for each trip---and used travel time predictions as the metric as the performance of the model. \citet*{hunter2009path} used a Bayesian framework and used an Expectation-Maximization algorithm that simultaneously learns the likely paths taken by probe vehicles as well as the travel time distributions through the network; \citet*{herring2010estimating} used a Coupled Hidden Markov Model (CHMM) and determines the most likely path by allocating the travel time between two consecutive location observations to roads in the M-step of the EM algorithm.
+With the ubiquity of GPS data, recent work focuses on estimating the traffic conditions in cities using sparse probe data---a time series of closely spaced GPS location data for each trip---and uses travel time predictions as the metric as the performance of the model. \citet*{hunter2009path} used a Bayesian framework and used an Expectation-Maximization algorithm that simultaneously learns the likely paths taken by probe vehicles as well as the travel time distributions through the network; \citet*{herring2010estimating} used a Coupled Hidden Markov Model (CHMM) and determined the most likely path by allocating the travel time between two consecutive location observations to roads in the M-step of the EM algorithm.
 
-Compared to previous work in the literature, we have much more missing information. Instead of sparse probe data, we are only working with start and end locations, which presents much more challenges in actual path inference and parameter optimization. \citet*{zhan2013urban} provided some very helpful insights since it used the same TLC dataset of taxi ride. They constructed a faithful representation of the Manhattan streets network, but limited the discussion to a much smaller district in Manhattan to reduce computational complexity. Moreover, \citet*{zhan2013urban} also used a softmax regression model for path selection (as detailed in Section~\ref{sec:softmax}), but only restricting the choice set to the 20 shortest paths. Our contribution relative to \citet*{zhan2013urban} is twofold: First, our work scales to the entirety of Manhattan by sacrificing the minute realism of their model and discretizing the Manhattan road network as a simply a grid; second, we employs a novel sampling-based approach to estimate the softmax regression model, so as to drastically expand the choice set of drivers in our model.
+Compared to previous work in the literature, we have much more missing information. Instead of sparse probe data, we are only working with start and end locations, which presents challenges in actual path inference and parameter optimization. \citet*{zhan2013urban} provide some helpful insights since they used the same TLC dataset of taxi ride. They constructed a faithful representation of the Manhattan streets network, but limited the discussion to a much smaller district in Manhattan to reduce computational complexity. Moreover, \citet*{zhan2013urban} also used a softmax regression model for path selection (as detailed in Section~\ref{sec:softmax}), but only restricting the choice set to the 20 shortest paths. Our contribution relative to \citet*{zhan2013urban} is twofold: First, our work scales to the entirety of Manhattan by sacrificing the minute realism of their model and discretizing the Manhattan road network as a simply a grid; second, we employ a novel sampling-based approach to estimate the softmax regression model, so as to drastically expand the choice set of drivers in our model.
 
 \section{Model}
 \label{sec:model}
@@ -187,7 +186,7 @@ T\uppr{k} | \bm W, Z\uppr{k} &\sim \Norm\pr{\sum_{i\in Z\uppr{k}} w_i, \sigma^2}
 where $p(Z\uppr{k} | \bm W)$ is a distribution over $\bm Z^{\uppr{k}}$. We consider two different ways to parameterize $p(Z\uppr{k} | \bm W)$: softmax regression and uniform. In the \emph{softmax regression} model, a type of generalized linear model for discrete choice problems \cite{mcfadden1973conditional}, we parameterize the route choice such that \[
 p(Z\uppr{k}|\bm W) \propto \exp\pr{-\sum_{i\in Z\uppr{k}}w_i},
 \]
-in order to encode the fact that drivers avoid routes that take a long period of time. In the \emph{uniform} model, we simply assume that route choice is independent and uniform on the set of reasonable paths: \[
+in order to encode the fact that drivers avoid routes that take a long period of time.\footnote{In general, we can have a \emph{temperature} parameter to the softmax that is not $1$. However, this is a hyperparameter since route choice is latent and thus not observable. To simplify notation and to be consistent with the applied parts of our project, we use softmax with temperature $1$.} In the \emph{uniform} model, we simply assume that route choice is independent and uniform on the set of reasonable paths: \[
 p(Z\uppr{k}|\bm W) \propto 1.
 \]
 The uniform model trades off realism in modeling for improvement in computation and training, as we see in Section~\ref{sec:inference}.
@@ -238,7 +237,7 @@ The log-likelihood is
 =& \log\pr{\sum_{Z\uppr{k} \in \bm Z\uppr{k}} p(T\uppr{k}|Z\uppr{k},\bm W)p(Z\uppr{k}|\bm W)} \\
 =& \log\pr{\E_{Z\uppr{k}}\bk{p(T\uppr{k}|Z\uppr{k},\bm W)}}.
 \end{align*}
-The expectation is a sum of the size $|\bm Z\uppr{k}|,$ which, for an $m\times n$ trip\footnote{By an $m\times n$ trip, we mean a trip with east-west distance $n$ and north-south distance $m$}, is of $\binom{m+n}{n} \approx \frac{(n+m)^n}{n^n}e^n$ terms. Computing this expectation is the main inference challenge of our project.
+The expectation is a sum of the size $|\bm Z\uppr{k}|,$ which, for an $m\times n$ trip\footnote{By an $m\times n$ trip, we mean a trip with east-west distance $n$ and north-south distance $m$}, is of $\binom{m+n}{n} \approx \frac{(n+m)^n}{n^n}e^n$ terms.\footnote{Sterling's approximation} Computing this expectation is the main inference challenge of our project.
 
 \subsection{Uniform Model}
 
@@ -276,14 +275,17 @@ We now consider a more realistic but more complex model, where we parameterize $
 Before we discuss our inference strategy, we first discuss a few difficulties of the model. At first glance, the latent variable structure seems lend well to the Expectation-Maximization algorithm \cite{dempster1977maximum}. However, the EM algorithm requires computing the term \[
 Q(\bm W|\bm W\uppr{t}) = \E\pr{\log(T\uppr{k}, Z\uppr{k} | \bm W) | T\uppr{k}, \bm W\uppr{t}},
 \]
-and computing the expectation requires the conditional distribution $p(Z | T, \bm W) = \frac{p(T|Z,\bm W)p(Z|\bm W)}{p(T|\bm W)}$, where the denominator is intractable to compute. We might also consider techniques in variational inference \cite{blei2017variational}. However, the latent variable $Z\uppr{k}$ is a random set of indices with the property that the indices form a path on the grid, and thus cannot be reasonably decomposed into independent components, ruling out the mean-field algorithm. Another promising option is stochastic gradient variational Bayes (SGVB) and variational autoencoders \cite{kingma2013auto}, which is designed for large datasets for which the EM algorithm fails. However, SGVB requires a reparameterization of the latent variable drawn from an approximate distribution, in order for the gradients to be properly computed. In SGVB, one independently draws some $\epsilon$ from a distribution and obtains $z$ via $z = g(\epsilon)$ for some continuous function $g$.\footnote{Here we are using the notation in \cite{kingma2013auto}.} This is difficult to do in our context, since $Z$ is not continuous nor scalar-valued. Thus it is difficult to find an $\epsilon$ and a continuous transformation to approximate samples from the distribution of $Z$.  
+and computing the expectation requires the conditional distribution \[p(Z | T, \bm W) = \frac{p(T|Z,\bm W)p(Z|\bm W)}{p(T|\bm W)},\] where the denominator is intractable to compute. We might also consider techniques in variational inference \cite{blei2017variational}. However, the latent variable $Z\uppr{k}$ is a random set of indices with the property that the indices form a path on the grid, and thus cannot be reasonably decomposed into independent components, ruling out the mean-field algorithm. Another promising option is stochastic gradient variational Bayes (SGVB) and variational autoencoders \cite{kingma2013auto}, which are designed for large datasets on which the EM algorithm fails. However, SGVB requires a reparameterization of the latent variable drawn from an approximate distribution, in order for the gradients to be properly computed. In SGVB, one independently draws some $\epsilon$ from a distribution and obtains $z$ via $z = g(\epsilon)$ for some continuous function $g$.\footnote{Here we are using the notation in \cite{kingma2013auto}.} This is difficult to do in our context, since $Z$ is not continuous nor scalar-valued. Thus it is difficult to find an $\epsilon$ and a continuous transformation to approximate samples from the distribution of $Z$.  
 
 Our inference strategy is based on a sampling-based approximating to the expectation over $\bm Z$. The key trick we use is that 
 \begin{equation}
 \label{eq:trick}
   \E_{Z}\bk{f(Z\uppr{k})} = |\bm Z\uppr{k}| \E_{\tilde Z}\bk{f(\tilde Z\uppr{k})p_Z(\tilde Z\uppr{k}|\bm W)},
 \end{equation}
-where $\tilde Z$ is drawn uniformly from $\bm Z$. This is the same technique as in importance sampling, except here the objective is to derive computationally tractable approximations, rather than maximizing the efficiency of the approximations. Exchanging $\log$ and expectation operator and applying \eqref{eq:trick} yields the following upper bound for negative log-likelihood, up to a constant,
+where $\tilde Z$ is drawn uniformly from $\bm Z$. This is the same technique as in importance sampling, except here the objective is to derive computationally tractable approximations, rather than maximizing the efficiency of the approximations. We note that the same trick allows us to replace any sum over $\bm Z$ with a weighted sum over the uniformly chosen sample. Exchanging $\log$ and expectation operator and applying \eqref{eq:trick} yields a lower bound for log-likelihood, up to a constant \[
+-\frac{1}{L}\bk{\sum_{\tilde Z} \frac{1}{2\sigma^2} \pr{T - \sum_{i\in \tilde Z} w_i}^2 + \log \frac{\exp\pr{-\sum_i w_i}}{\sum_{\bm Z}\exp\pr{-\sum_i w_i}}}.
+\]
+Using $\tilde Z$ again to approximate the sum in the denominator yields the following upper bound for negative log-likelihood, up to a constant,
 \begin{align}
 &\frac{1}{2L\sigma^2}\sum_{j=1}^L \bk{T\uppr{k} + \sum_{i\in \tilde Z\uppr{k}_j}w_i}^2 + \frac{1}{L}\sum_{i=1}^L\sum_{i\in\tilde Z_{j}\uppr{k}}w_i 
 \label{eq:softmax_objective}
@@ -312,7 +314,7 @@ where we sample uniformly and independently $\{\tilde Z_j\uppr{k}\}_{j=1}^L$. Th
 
 \subsection{Prediction}
 \label{sub:predict}
-We conclude this section by briefly discussing prediction in our models. In the uniform model, prediction is straightforward. We calculate the expected time $\hat T = \sum_i w_i \pi_i$, where $\pi_i$ is the marginal probability that node $i$ is included in a uniformly randomly chosen path. Computing prediction is slightly more subtle in the softmax regression model. In the softmax regression model, we sample $L_{\text{pred}}$ uniformly chosen paths and take the weighted average of the sums of $w_i$ in each path, where the weights are proportional to $\exp(-\sum_{i \in Z} w_i)$ for path $Z$. 
+We conclude this section by briefly discussing prediction in our models. In the uniform model, prediction is straightforward. We calculate the expected time $\hat T = \sum_i w_i \pi_i$, where $\pi_i$ is the marginal probability that node $i$ is included in a uniformly randomly chosen path. Computing prediction is slightly more subtle in the softmax regression model. In the softmax regression model, we sample $L_{\text{pred}}$\footnote{In the implementation and application, we used $L_\text{pred} = 50$.} uniformly chosen paths and take the weighted average of the sums of $w_i$ in each path, where the weights are proportional to $\exp(-\sum_{i \in Z} w_i)$ for path $Z$. 
 
 % {\color{gray}
 % \begin{itemize}
