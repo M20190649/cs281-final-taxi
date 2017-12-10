@@ -354,25 +354,27 @@ January 2009. From the raw data, we added several computed columns.
 We one-hot-encoded columns for hour of day (24 columns) as well as for
 day of the week (7 columns). We also explicitly computed the duration of the trip  in seconds as the dependent variable to predict.
 
-In addition to adding columns, we filtered the original dataset. We only consider trips
-whose start- and end-locations that falls inside a rectangle that bounds Manhattan. We also removed trips with duration less than two minutes or more than two hours.
+In addition to adding columns, we filtered the original dataset. We only
+considered trips
+whose start- and end-locations fall inside a rectangle that bounds Manhattan. We also removed trips with duration less than two minutes or more than two hours.
 
 We performed a principal component analysis on all de-meaned and
-standardized geographic coordinates (both start
-and end locations) from the filtered data. We thus transform the coordinates into the first and second principal components. This allowed us to compute the rotational matrix so that Manhattan lies approximately orthogonal to the $x$-axis. For the discrete
+standardized geographic coordinates (both start-
+and end-locations) from the filtered data. We transformed the coordinates into
+the first and second principal components. This allowed us to compute the
+rotational matrix so that the major axis of Manhattan lies approximately orthogonal to the $x$-axis. For the discrete
 grid models, these coordinates were further discretized into a $20 \times 70$
 grid. Each node in the grid approximately corresponds to a $400\text{ft} \times 400\text{ft}$ area. We chose the grid size as a compromise between computational tractability and model expressiveness.
 
 We saved the dataset as a whole, and we also partitioned into $(\text{day of week},
 \text{hour})$ groups, using the one-hot encoded vectors. Some models were
 trained on the entire dataset (e.g.\ Neural Network), and some were trained
-individually on the partioned datasets (e.g.\ Structural Models).
+individually on the partioned datasets (e.g.\ our structural models).
 
 \subsection{Baselines}
 
 We calculated three baselines. The first was a linear regression predicting
-trip duration from trip distance (calculated using the Pythagorean Theorem and
-the start and end coordinates), and trained on a partitioned data set. 
+trip duration from Euclidian distance, and trained on a partitioned data set. 
 
 The second was a neural network trained on the
 entire dataset taking as input the start and end coordinates as well as the day
@@ -382,25 +384,31 @@ layer with 50 neurons and a $\tanh$ activation function.
 The third baseline was constructed by querying the Google Maps Distance Matrix
 API.\footnote{\url{https://developers.google.com/maps/documentation/distance-matrix/}}
 While there was no need to train this baseline, there was a rate limit
-constraint on how many test data points it could be tested on. We assess its
-performance on approximately 2,500 data points in a representative partioned test dataset. Moreover, Google Maps API does not allow predicting travel time in the past, and thus for each trip, we use a random Tuesday 8:00 AM in January 2018 as a proxy. From our tests, the predictions of Google Maps API are not significantly different, whether the user submits a start time or not. Thus, we believe that this is a reasonable approximation given limitations to the data.
+constraint on how many test data points it could be tested on. We assessed its
+performance on approximately 2,500 data points in a representative partioned
+test dataset. Moreover, Google Maps API does not allow predicting travel time in
+the past, and thus for each trip, we used a random Tuesday 8:00 AM in January 2018 as a proxy. From our tests, the predictions of Google Maps API are not significantly different, whether the user submits a start time or not. Thus, we believe that this is a reasonable approximation given limitations to the data.
 
 \subsection{Training}
 
 Training implementations varied from model to model. In training the neural
-network baseline, SGD was used with a learning rate of $10^{-7}$ run for 12
+network baseline, we used SGD with a learning rate of $10^{-7}$ run for twelve 
 epochs on the full data set. This took between 30 minutes and an hour. The
 uniform paths structural model was similarly trained with SGD, with a learning
 rate of $10^{-4}$. 
 
 The uniform model was only trained on a subset of the
 dataset corresponding to all trips on a given day of the week and on a given
-hour. Convergence appeared after roughly two epochs, and the model was run for 5
-epochs taking just under ten minutes.
+hour. Convergence appeared after roughly two epochs, and the model was run for
+five epochs taking just under ten minutes.
 
 The softmax regression model was trained
 using the Adam optimizer \cite{kingma2014adam} with learning rate $5\times 10^{-3}$ for various epochs for different data-subsets,\footnote{The epochs are calculated so that the total numbers of trips trained by the model are approximately constant across the subsets of data. This means that we trained for 131 epochs for 4:00 AM but only 6 epochs for 8:00 AM, since the two data-subsets have drastically different number of trips. Nonetheless, as Figure~\ref{fig:softmaxloss} shows, we reached convergence in each dataset we trained on.}
-taking approximately thirty minutes for each data-subset. Additionally, the softmax regression model take hyperparameters $L$ (sample size in each stochastic draw) and $\sigma^2$ (variance of trip time). We chose $L = 20$ and $\sigma^2 = 100$. These values are again chosen to strike a bargain between realism and computation feasibility. The model appears to converge by the second epoch. 
+taking approximately thirty minutes for each data-subset. Additionally, the
+softmax regression model takes hyperparameters $L$ (sample size in each
+stochastic draw) and $\sigma^2$ (variance of trip time). We chose $L = 20$ and
+$\sigma^2 = 100$. These were again chosen to strike a bargain between realism
+and computation feasibility. The model appeared to converge by the second epoch. 
 
 \section{Results}
 \label{sec:results}
@@ -421,8 +429,14 @@ taking approximately thirty minutes for each data-subset. Additionally, the soft
 \label{fig:softmaxloss}
 \end{figure}
 
-We train our model and test the model on an out-of-sample test-set using the methods discussed in Section~\ref{sub:predict}. As a simple check of the training process, we plot in Figure~\ref{fig:softmaxloss} the loss obtained when fitting the softmax regression model. We see that the model converges relatively fast.\footnote{The full fitting takes approximately 30 minutes per dataset (2.9 GHz Intel Core i5, 8GB RAM), but the model appears to converge in only 20\% of that time.} The convergence plot for the uniform model is extremely similar and thus omitted. Table~\ref{tab:mainres} contains the main prediction results of our model relative to some benchmark predictions
-such as the Google Maps Distance Matrix API, neural network, and linear regression. We note that, in terms of predictive metrics, our models were able to outperform Google Maps and linear regression, but were not able to outperform the neural network, even though the difference is not very large. Despite the disappointing outcome, the advantage of our framework is that the parameters have structural interpretations, whereas the neural network is a black box. 
+We train our model and test the model on an out-of-sample test-set using the
+methods discussed in Section~\ref{sub:predict}. As a simple check of the
+training process, we plot in Figure~\ref{fig:softmaxloss} the loss obtained when
+fitting the softmax regression model. We see that the model converges relatively
+fast.\footnote{The full fitting takes approximately 30 minutes per dataset (2.9
+GHz Intel Core i5, 8GB RAM), but the model appears to converge in only one-fifth
+of this time.} The convergence plot for the uniform model is extremely similar and thus omitted. Table~\ref{tab:mainres} contains the main prediction results of our model relative to some benchmark predictions
+such as the Google Maps Distance Matrix API, neural network, and linear regression. We note that, in terms of predictive metrics, our models were able to outperform Google Maps and linear regression, but were not able to outperform the neural network, even though the difference is not very large. 
 
 \begin{table*}[h!]
 \centering
@@ -461,7 +475,15 @@ Test-set\tnote{4}  \, $R^2$ & 0.54 & 0.68& 0.33 & 0.53 & 0.53 \\
 %  
 
 
-Table~\ref{tab:mainres} is encouraging. Our models successfully leverage the power of geography and picks up more signal in the data than distance of the trip alone, as demonstrated by the significantly improved performance over linear regression. Perhaps more strikingly, our model slightly outperforms the predictions generated by Google Maps, which means that the predictive accuracy of the model is on par with the standard of a widely used consumer product. Even though we were not able to outperform the neural network, we reiterate that the main advantage of our approach is to have interpretable parameters, which are visualized in Figure~\ref{fig:unifmap}. We turn to the figure in the next section.
+Table~\ref{tab:mainres} is encouraging. Our models successfully leverage the
+power of geography and pick up more signal in the data than distance of the trip
+alone, as demonstrated by the significantly improved performance over linear
+regression. Perhaps more strikingly, our model slightly outperforms the
+predictions generated by Google Maps, which means that the predictive accuracy
+of the model is on par with the standard of a widely used consumer product. Even
+though we were not able to outperform the neural network, we reiterate that the
+main advantage of our approach is to have interpretable parameters, which are
+visualized in Figure~\ref{fig:unifmap}. We turn to the figure now.
 % \begin{itemize}
 % \item What conclusions can you draw from the results section?
 % \item Is there further analysis you can do into the results of the system? Here is a good place to include visualizations, graphs, qualitative analysis of your results.
@@ -473,13 +495,14 @@ Table~\ref{tab:mainres} is encouraging. Our models successfully leverage the pow
 \includegraphics[width=0.5\textwidth]{figs/unifmaps.pdf}
 \includegraphics[width=0.5\textwidth]{figs/softmaxmaps.pdf}
 \caption{Learned weights, various times Tuesday. Top row: uniform model.
-Bottom row: softmax model.}
+Bottom row: softmax model. \emph{In the grids, the southern border of Central Park lies
+approximately three-sevenths of the way up}}
 \label{fig:unifmap}
 \end{figure}
 
 \subsection{Comparing Models}
 
-Figure~\ref{fig:unifmap} shows that the parameter values for the uniform and softmax regression models behave similarly, with similar areas of high and low congestion. The patterns seem to largely agree with conventional wisdom, both in spatial and temporal dimensions. We identify that 4:00 AM is indeed less congested than rush hour, that Midtown Manhattan seems to be particularly congested during the day, and that the congested areas have an average speed of 4--6 miles per hour. The visualization also confirms some less-than-well-known features; the areas that demonstrate congestion at 4:00 AM largely confirms with anecdotal evidence.\footnote{According to \textit{Business Insider} (\url{http://read.bi/164vSK1}), East Village and surrounding areas rank highly for nightlife. %#GETLIT
+Figure~\ref{fig:unifmap} shows that the parameter values for the uniform and softmax regression models behave similarly, with similar areas of high and low congestion. The patterns seem to largely agree with conventional wisdom, both in spatial and temporal dimensions. We identify that 4:00 AM is indeed less congested than rush hour, that Midtown Manhattan seems to be particularly congested during the day, and that the congested areas have an average speed of 4--6 miles per hour. The visualization also confirms some less-than-well-known features; the areas that demonstrate congestion at 4:00 AM largely confirms anecdotal evidence.\footnote{According to \textit{Business Insider} (\url{http://read.bi/164vSK1}), East Village and surrounding areas rank highly for nightlife. %#GETLIT
 } As the models seem to produce largely similar output, we conclude that they are fairly robust.
 
 However, the two models do have significant differences. The softmax regression model appears to have smoother parameter values than the uniform model. This is consistent with the softmax model ascribing higher probability to faster paths, and so we expect the parameter updates to spread out spatially.
@@ -498,15 +521,16 @@ visual inspection of the grid of weights that the softmax model converges to
 (see bottom row of Figure \ref{fig:unifmap}) reveals a pattern that resembles a
 checkerboard. This behavior is most visible in the 4:00 AM weights, but also
 appears in certain areas of the other grids. We suspect this has to do with the
-superimposition of paths that we train on, but the result largely remains an
-unexpected surprise.
+superimposition of paths that we train on, but the result largely remains a
+surprise.
 
 Furthermore, we are also intrigued by the bias our models introduce: both the
 uniform and softmax structural models on average underestimate trip duration
 (see Table \ref{tab:mainres}). Since we optimize an approximate bound, it
 is believable that this procedure introduced bias. Nevertheless, we are
 missing a good intuition as to why we systematically underestimate and whether
-this is a feature or a bug.
+this is a feature or a bug. It is also interesting to note that the Google Maps
+predictions exhibit a bias in the opposite direction.
 
 % checkboard?
 % bias?
@@ -543,8 +567,8 @@ structural parameters.
 
 \subsection{Future Work}
 
-In thinking of ways to develop our work further, a couple of directions come to
-mind. Foremost among them is taking a closer look at which of the softmax and
+We now discuss a few directions for future work. Foremost among them is
+taking a closer look at which of the softmax and
 uniform models best captures reality. They perform very similarly on our
 test data, but their weights correspond to structurally different maps of
 Manhattan. Future work could help determine which of these depictions best
@@ -557,6 +581,11 @@ Tuesdays, or 8:00 AM on Wednesdays. Exploring ways to leverage this structure
 through transfer learning could significantly speed up the training of our
 models.
 
+Finally, we note that our models condition only on hour and day of the week when
+making predictions. However, our framework can incorporate a wider range of
+relevant information. For instance, if weather data were accessible, the effect
+of different weather conditions on road congestion could be measured. Similarly,
+abnormal traffic conditions on holidays could be identified.
 
 
 %% Feature extraction from parameter values 
