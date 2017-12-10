@@ -44,9 +44,14 @@ Using the New York City Taxi and Limousine Commission (TLC) database of taxi rid
 \section{Introduction}
 \label{sec:introduction}
 
-% re
+Estimating congestion and predicting trip time are important problems in urban economics, civil engineering, and operations research. The problem lends well to approaches in computational probabilistic inference and machine learning, thanks to the increasing availability of GPS data. Non-probabilistic machine learning methods, such as neural networks, perform extremely well in prediction, but generate parameters that do not have structural interpretations. On the other hand, current probabilistic methods, most of which are based on mixture models, either rely on extremely granular data such as closely spaced GPS measurements \cite{hunter2009path} or are difficult to scale to a large geographical area \cite{zhan2013urban}. 
+
+Our main contribution in this project is devising a stylized probabilistic model of travel, congestion, and route choice and creating two strategies of parameterization and approximate inference. From a data standpoint, our model does not require extremely granular data---training on a large dataset of taxi rides in New York City that only includes start- and end-trip locations. From an implementation standpoint, our model is parsimonious, scalable to large geographical areas and large datasets, and easy to train. From a prediction standpoint, our model is close to or outperforms many baseline metrics, such as neural network, linear regression, or Google Maps. In stark contrast with black-box methods, our model generates interpretable parameters that directly corresponds to level of congestion in a small area. We believe the ability to generate easily interpretable parameters is the foremost of our contributions, as it is transparent and accessible to a broad class of users---leading to, for instance, better urban planning and transportation design by policymakers.
+
+This report proceeds as follows. Sections~\ref{sec:backgrd} and \ref{sec:related} briefly discuss some features of the data and some work in the previous literature. Section~\ref{sec:model} introduces our modeling framework formally and Section~\ref{sec:inference} introduces two methods for approximate inference of our model. Sections~\ref{sec:methods} and \ref{sec:results} discuss training on the TLC dataset and present predictive metrics of the training results relative to baseline. Section~\ref{sec:discuss} discusses the results and the accompanying visualization of parameters, while addressing issues of concern and of future inquiry. Section~\ref{sec:conc} concludes. 
 
 \section{Background}
+\label{sec:backgrd}
 % {
 % \color{gray}
 % Example Structure:
@@ -104,6 +109,7 @@ challenges.
 
 
 \section{Related Work}
+\label{sec:related}
 
 % Example Structure:
 % \begin{itemize}
@@ -120,6 +126,7 @@ With the ubiquity of taxi GPS data, recent work focused on estimating the traffi
 Compared to previous work in the literature, we have much more missing information. Instead of sparse probe data, we are only working with start and end locations, which presents much more challenges in actual path inference and parameter optimization. \citet*{zhan2013urban} provided some very helpful insights since it used the same TLC dataset of taxi ride. They constructed a faithful representation of the Manhattan streets network, but limited the discussion to a much smaller district in Manhattan to reduce computational complexity. Moreover, \citet*{zhan2013urban} also used a softmax regression model for path selection (as detailed in Section~\ref{sec:softmax}), but only restricting the choice set to the 20 shortest paths. Our contribution relative to \citet*{zhan2013urban} is twofold: First, our work scales to the entirety of Manhattan by sacrificing the minute realism of their model and discretizing the Manhattan road network as a simply a grid; second, we employs a novel sampling-based approach to estimate the softmax regression model, so as to drastically expand the choice set of drivers in our model.
 
 \section{Model}
+\label{sec:model}
 
 We represent a city's road network with a connected graph $G = (V,E)$. Assume that each vertex $i \in V$ is associated with a weight $w_i$, representing the cost of traversing vertex $i$. A trip is represented by a path in $G$, and the distribution of the trip's duration depends on the weights $w_i$ of vertices included in the path. Note that the choice of the path can in general depend on the collection of weights $\bm W$. In full generality, the model is represented by Figure~\ref{fig:dgm}, where trips in the data are indexed by $(k)$, $T\uppr{k}$ is the observed trip duration, and $Z\uppr{k}$ is the path taken by trip $k$, a latent variable. Our primary interest is to perform inference on $\bm W$, so as to learn the levels of congestion associated with each vertex in $G$. 
 
@@ -323,6 +330,7 @@ We conclude this section by briefly discussing prediction in our models. In the 
 
 
 \section{Methods}
+\label{sec:methods}
 
 % {
 % \color{gray}
@@ -393,6 +401,7 @@ using the Adam optimizer \cite{kingma2014adam} with learning rate $10^{-2}$ for 
 taking approximately an hour. Additionally, the softmax regression model take hyperparameters $L$ (sample size in each stochastic draw) and $\sigma^2$ (variance of trip time). We chose $L = 20$ and $\sigma^2 = 100$. These values are again chosen to strike a bargain between realism and computation feasibility. The model appears to converge by the second epoch. 
 
 \section{Results}
+\label{sec:results}
 
 
 % {\color{gray}\begin{itemize}
@@ -444,6 +453,7 @@ Test-set\tnote{4}  \, $R^2$ & 0.54 & 0.68& 0.33 & 0.53 & 0.53 \\
 
 
 \section{Discussion}
+\label{sec:discuss}
 
 % table
 %  
@@ -508,7 +518,7 @@ It is difficult to select the model to use based on predictive metrics alone, as
 % \end{figure}
 
 \section{Conclusion}
-
+\label{sec:conc}
 
 %% Feature extraction from parameter values 
 
