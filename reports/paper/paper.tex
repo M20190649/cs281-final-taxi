@@ -32,11 +32,11 @@
 ]
 
 \begin{abstract}
-  \begin{itemize}
-  \item This document describes the expected style, structure, and rough proportions for your final project write-up.
-  \item While you are free to break from this structure, consider it a strong prior for our expectations of the final report.
-\item Length is a hard constraint. You are only allowed max \textbf{8 pages} in this format. While you can include supplementary material, it will not be factored into the grading process. It is your responsibility to convey the main contributions of the work in the length given.
-  \end{itemize}
+%   \begin{itemize}
+%   \item This document describes the expected style, structure, and rough proportions for your final project write-up.
+%   \item While you are free to break from this structure, consider it a strong prior for our expectations of the final report.
+% \item Length is a hard constraint. You are only allowed max \textbf{8 pages} in this format. While you can include supplementary material, it will not be factored into the grading process. It is your responsibility to convey the main contributions of the work in the length given.
+%   \end{itemize}
 
 
 
@@ -45,13 +45,7 @@
 \section{Introduction}
 \label{sec:introduction}
 
-Example Structure:
-\begin{itemize}
-\item What is the problem of interest and what (high-level) are the current best methods for solving it?
-\item How do you plan to improve/understand/modify this or related methods?
-\item Preview your research process, list the contributions you made, and summarize your experimental findings.
-\end{itemize}
-
+% re
 
 \section{Background}
 % {
@@ -76,7 +70,7 @@ January of 2009 alone, there were over 14 million taxi rides recorded.
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.5\textwidth]{figs/ridesbyhour.pdf}
-\caption{Taxi Trips by Time of Day}
+\caption{Taxi trips by time of day}
 \label{fig:ridesbyhour}
 \end{figure}
 
@@ -88,7 +82,7 @@ future bucketing of the data.
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.5\textwidth]{figs/tripdurations.pdf}
-\caption{Taxi Trips by Duration}
+\caption{Taxi trips by duration}
 \label{fig:tripdurations}
 \end{figure}
 
@@ -112,13 +106,13 @@ challenges.
 
 \section{Related Work}
 
-Example Structure:
-\begin{itemize}
-\item What 3-5 papers have been published in this space?
-\item How do these  differ from your approach?
-\item What data or methodologies do each of these works use?
-\item How do you plan to compare to these methods?
-\end{itemize}
+% Example Structure:
+% \begin{itemize}
+% \item What 3-5 papers have been published in this space?
+% \item How do these  differ from your approach?
+% \item What data or methodologies do each of these works use?
+% \item How do you plan to compare to these methods?
+% \end{itemize}
 
 Travel time prediction has historically been a topic of research interest. On the topic of freeway travel time prediction, \cite{van2002freeway} proposed a Recurrent Neural Network (RNN) approach in order to address the temporal aspect of traffic prediction; \cite{wu2004travel} adopted the Supportive Vector Regression (SVR) method applied to time-seires analysis and reduced prediction errors in cases where previous methods generate especially large errors. We notice that earlier papers share the common feature of using freeway data for training and prediction, which probably arised from the limited availability of GPS data sources. Nevertheless, we realize that even for freeways, which in general have less traffic conditions than city roads, there is evidence that there exists a high level of non-linearity in the data, which contributes to the good performance of models such as RNN and SVR.
 
@@ -402,18 +396,18 @@ taking approximately an hour. Additionally, the softmax regression model take hy
 \section{Results}
 
 
-{\color{gray}\begin{itemize}
-\item What were the results comparing previous work / baseline systems / your systems on the main task?
-\item What were the secondary results comparing the variants of your system?
-\item This section should be fact based and relatively dry. What happened, what was significant?
-\end{itemize}
-}
+% {\color{gray}\begin{itemize}
+% \item What were the results comparing previous work / baseline systems / your systems on the main task?
+% \item What were the secondary results comparing the variants of your system?
+% \item This section should be fact based and relatively dry. What happened, what was significant?
+% \end{itemize}
+% }
 
 
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.5\textwidth]{figs/softmaxloss}
-\caption{Softmax model training loss, rolling average.}
+\caption{Softmax model training loss, rolling average}
 \label{fig:softmaxloss}
 \end{figure}
 
@@ -456,7 +450,7 @@ Test-set\tnote{4}  \, $R^2$ & 0.54 & 0.68& 0.33 & 0.53 & 0.53 \\
 %  
 
 
-Table~\ref{tab:mainres} is encouraging. Our models successfully leverage the power of geography and picks up more signal in the data than distance of the trip alone, as demonstrated by the significantly improved performance over linear regression. Perhaps more strikingly, our model slightly outperforms the predictions generated by Google Maps, which means that the predictive accuracy of the model is on par with the standard of a widely used consumer product. Even though we were not able to outperform the neural network, we reiterate that the main advantage of our approach is to have interpretable parameters, which are visualized in Figure~\ref{fig:unifmap}.
+Table~\ref{tab:mainres} is encouraging. Our models successfully leverage the power of geography and picks up more signal in the data than distance of the trip alone, as demonstrated by the significantly improved performance over linear regression. Perhaps more strikingly, our model slightly outperforms the predictions generated by Google Maps, which means that the predictive accuracy of the model is on par with the standard of a widely used consumer product. Even though we were not able to outperform the neural network, we reiterate that the main advantage of our approach is to have interpretable parameters, which are visualized in Figure~\ref{fig:unifmap}. We turn to the figure in the next section.
 % \begin{itemize}
 % \item What conclusions can you draw from the results section?
 % \item Is there further analysis you can do into the results of the system? Here is a good place to include visualizations, graphs, qualitative analysis of your results.
@@ -474,10 +468,24 @@ Bottom Row: Softmax Model.}
 
 \subsection{Comparing Models}
 
+Figure~\ref{fig:unifmap} shows that the parameter values for the uniform and softmax regression models behave similarly, with similar areas of high and low congestion. The patterns seem to largely agree with conventional wisdom, both in spatial and temporal dimensions. We identify that 4:00 AM is indeed less congested than rush hour, that Midtown Manhattan seems to be particularly congested during the day, and that the congested areas have an average speed of 4--6 miles per hour. The visualization also confirms some less-than-well-known features; the areas that demonstrate congestion at 4:00 AM largely confirms with anecdotal evidence.\footnote{According to \textit{Business Insider} (\url{http://read.bi/164vSK1}), East Village and surrounding areas rank highly for nightlife. %#GETLIT
+} As the models seem to produce largely similar output, we conclude that they are fairly robust.
+
+However, the two models do have significant differences. The softmax regression model appears to have smoother parameter values than the uniform model. This is consistent with the softmax model ascribing higher probability to faster paths, and so we expect the parameter updates to spread out spatially.
+
+It is difficult to select the model to use based on predictive metrics alone, as the models perform strikingly similarly. However, from a practical standpoint, the uniform model is significantly easier to implement and faster to train than the softmax regression model, even though the latter embraces more structural realism.
+
+% For instance, both models identify an interesting feature of the traffic patterns in Manhattan, where it is less congested east of Broadway in lower Manhattan than west of Broadway---we speculate that 
+
 
 
 \subsection{Remaining Puzzles}
 
+% chekcboard?
+% bias?
+% unclear how to decide which one is better
+% improve the softmax one??
+% 
 
 
 \begin{itemize}
@@ -502,12 +510,10 @@ Bottom Row: Softmax Model.}
 
 \section{Conclusion}
 
-\begin{itemize}
-\item What happened?
-\item What next?
-\end{itemize}
 
+%% Feature extraction from parameter values 
 
+%TODO
 
 % \section*{Acknowledgements}
 
