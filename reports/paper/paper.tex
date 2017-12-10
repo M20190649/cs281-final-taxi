@@ -38,8 +38,7 @@
 % \item Length is a hard constraint. You are only allowed max \textbf{8 pages} in this format. While you can include supplementary material, it will not be factored into the grading process. It is your responsibility to convey the main contributions of the work in the length given.
 %   \end{itemize}
 
-
-
+Using the New York City Taxi and Limousine Commission (TLC) database of taxi rides, we develop a probabilistic model of transportation in New York City. By discretizing the Manhattan geography into a grid structure and by using a mixture model with the latent variable being the route chosen by the driver, we devise a model with a parsimonious number of parameters that is easy to implement even for a large city, fast to estimate, and yields reasonable prediction results relative to benchmarks of Google Maps, linear regression, and neural network. Moreover, the parameters of the model can be directly interpreted and visualized as measures of congestion on Manhattan's road network.
 \end{abstract}
 
 \section{Introduction}
@@ -114,11 +113,11 @@ challenges.
 % \item How do you plan to compare to these methods?
 % \end{itemize}
 
-Travel time prediction has historically been a topic of research interest. On the topic of freeway travel time prediction, \cite{van2002freeway} proposed a Recurrent Neural Network (RNN) approach in order to address the temporal aspect of traffic prediction; \cite{wu2004travel} adopted the Supportive Vector Regression (SVR) method applied to time-seires analysis and reduced prediction errors in cases where previous methods generate especially large errors. We notice that earlier papers share the common feature of using freeway data for training and prediction, which probably arised from the limited availability of GPS data sources. Nevertheless, we realize that even for freeways, which in general have less traffic conditions than city roads, there is evidence that there exists a high level of non-linearity in the data, which contributes to the good performance of models such as RNN and SVR.
+Travel time prediction has historically been a topic of research interest. On a problem of freeway travel time prediction, \citet*{van2002freeway} proposed a Recurrent Neural Network (RNN) approach in order to address the temporal aspect of traffic prediction; \citet*{wu2004travel} adopted the Supportive Vector Regression (SVR) method applied to time-series analysis and reduced prediction errors in cases where previous methods generate especially large errors. We notice that earlier papers share the common feature of using freeway data for training and prediction, which probably arises from the limited availability of GPS data sources. Nevertheless, we realize that even for freeways, which in general have less congestion than city roads, there is evidence that there exists a high level of non-linearity in the data, which contributes to the good performance of models such as RNN and SVR.
 
-With the ubiquity of taxi GPS data, recent work focused on estimating the traffic conditions in cities using sparce probe data and used travel time predictions as the metric as the performance of the model. \cite{hunter2009path} uses a Bayesian framework and used an expectation maximization algorithm that simultaneously learns the likely paths taken by probe vehicles as well as the travel time distributions through the network; \cite{herring2010estimating} used a Coupled Hidden Markov Model (CHMM) and determines the most likely path by allocating the travel time between two consecutive location observations to roads in the `M' step.
+With the ubiquity of taxi GPS data, recent work focused on estimating the traffic conditions in cities using sparse probe data---a time series of closely spaced GPS location data for each trip---and used travel time predictions as the metric as the performance of the model. \citet*{hunter2009path} used a Bayesian framework and used an Expectation-Maximization algorithm that simultaneously learns the likely paths taken by probe vehicles as well as the travel time distributions through the network; \citet*{herring2010estimating} used a Coupled Hidden Markov Model (CHMM) and determines the most likely path by allocating the travel time between two consecutive location observations to roads in the M-step of the EM algorithm.
 
-One thing that distinguishes our attempt to the previous work is that we have much more missing information. Instead of sparse probe data, we are only working with start and end locations, which presents much more challenges in actual path inference and parameter optimization. \cite{zhan2013urban} provided some very helpful insights since it used the same TLC dataset of taxi ride. It contructed a faithful representation of the manhattan streets network, but limited the discussion to a much smaller district in Manhattan to reduce computational complexity.
+Compared to previous work in the literature, we have much more missing information. Instead of sparse probe data, we are only working with start and end locations, which presents much more challenges in actual path inference and parameter optimization. \citet*{zhan2013urban} provided some very helpful insights since it used the same TLC dataset of taxi ride. They constructed a faithful representation of the Manhattan streets network, but limited the discussion to a much smaller district in Manhattan to reduce computational complexity. Moreover, \citet*{zhan2013urban} also used a softmax regression model for path selection (as detailed in Section~\ref{sec:softmax}), but only restricting the choice set to the 20 shortest paths. Our contribution relative to \citet*{zhan2013urban} is twofold: First, our work scales to the entirety of Manhattan by sacrificing the minute realism of their model and discretizing the Manhattan road network as a simply a grid; second, we employs a novel sampling-based approach to estimate the softmax regression model, so as to drastically expand the choice set of drivers in our model.
 
 \section{Model}
 
@@ -186,7 +185,7 @@ p(Z\uppr{k}|\bm W) \propto 1.
 \]
 The uniform model trades off realism in modeling for improvement in computation and training, as we see in Section~\ref{sec:inference}.
 
-In our application to the Manhattan dataset, we perform MLE inference, or, equivalently, MAP inference with $p(\bm W) \propto 1$. In principle, it is not difficult to parameterize the prior of $\bm W$ as an undirected graphical model, since we need only to supply edge and unary potentials. For instance, to impose a correlated prior on $\bm W$, as suggested by some \cite{hunter2009path}, we simply penalize large differences in neighboring weights in the edge potential, effectively assuming a prior model that is similar to a continuous version of the Ising model. 
+In our application to the Manhattan dataset, we perform MLE inference, or, equivalently, MAP inference with $p(\bm W) \propto 1$. In principle, it is not difficult to parameterize the prior of $\bm W$ as an undirected graphical model, since we need only to supply edge and unary potentials. For instance, to impose a correlated prior on $\bm W$, as suggested by \citet*{hunter2009path}, we simply penalize large differences in neighboring weights in the edge potential, effectively assuming a prior model that is similar to a continuous version of the Ising model. 
 
 
 
@@ -260,7 +259,7 @@ where $\pi_i$ is the marginal probability of node $i$ being included in a unifor
  
  
 \subsection{Softmax Regression Model}
-
+\label{sec:softmax}
 We now consider a more realistic but more complex model, where we parameterize $Z|\bm W$ as a GLM, namely as a softmax regression where $p(Z|\bm W) \propto \exp\pr{-\sum_{i\in Z}w_i}$, encoding drivers' preferences for shorter trips. The log-likelihood in this model is \begin{align*}
 & \ell(\bm W) \\
 =& \log\pr{\E_{Z\uppr{k}}\bk{\frac{1}{\sqrt{2\pi}\sigma} e^{-\frac{1}{2\sigma^2}(T\uppr{k} - \sum_i w_i)^2}}}\\
