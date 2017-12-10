@@ -506,23 +506,6 @@ is believable that this procedure introduced bias. Nevertheless, we are
 missing a good intuition as to why we systematically underestimate and whether
 this is a feature or a bug.
 
-\subsection{Future Work}
-
-In thinking of ways to develop our work further, a couple of directions come to
-mind. Foremost among them is taking a closer look at which of the softmax and
-uniform models best captures reality. They perform very similarly on our
-test data, but their weights correspond to structurally different maps of
-Manhattan. Future work could help determine which of these depictions best
-tracks actual traffic conditions.
-
-In addition, our models currently train from scratch on each partition of the
-data. However, it is not hard to imagine that, for example, traffic conditions
-at 8:00 AM on Tuesdays can tell you something about conditions at 9:00 AM on
-Tuesdays, or 8:00 AM on Wednesdays. Exploring ways to leverage this structure
-through transfer learning could significantly speed up the training of our
-models.
-
-
 % checkboard?
 % bias?
 % unclear how to decide which one is better
@@ -546,6 +529,31 @@ models.
 
 \section{Conclusion}
 \label{sec:conc}
+
+In this paper, we introduce a model that scales effectively, can be trained
+without granular data, performs competitively with baselines (including Google
+Maps predictions), and has parameters that correspond to structural measures of
+congestion. We stress the combination of these attributes as the value of our
+model, since various other models exist if we relax these criteria. For
+instance, \citealt{hunter2009path} trains on granular data, 
+\citealt{zhan2013urban} scales poorly, and a neural network does not have
+structural parameters.
+
+\subsection{Future Work}
+
+In thinking of ways to develop our work further, a couple of directions come to
+mind. Foremost among them is taking a closer look at which of the softmax and
+uniform models best captures reality. They perform very similarly on our
+test data, but their weights correspond to structurally different maps of
+Manhattan. Future work could help determine which of these depictions best
+tracks actual traffic conditions.
+
+In addition, our models currently train from scratch on each partition of the
+data. However, it is not hard to imagine that, for example, traffic conditions
+at 8:00 AM on Tuesdays can tell you something about conditions at 9:00 AM on
+Tuesdays, or 8:00 AM on Wednesdays. Exploring ways to leverage this structure
+through transfer learning could significantly speed up the training of our
+models.
 
 
 
